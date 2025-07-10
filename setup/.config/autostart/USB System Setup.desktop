@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=gnome-terminal --title=SetUp -- sudo /home/setup/setup.sh
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[en_CA]=USB System Setup
+Comment[en_CA]=Script to finalise the USB based system setup.
+X-GNOME-Autostart-Delay=15
