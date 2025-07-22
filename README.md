@@ -132,7 +132,7 @@ sudo sgdisk --new=4:0:+16091137 /dev/sdTARGET
 
 The following commands set the correct types for the partitions and assign them names. The names themselves aren't important, but may be helpful in the future if trying to sort out which partition is used for what.
 
-````bash
+```bash
 sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8300 /dev/sdTARGET
 ```
 ```bash
