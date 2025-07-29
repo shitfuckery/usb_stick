@@ -141,12 +141,12 @@ The USB stick in this case is name /dev/sda. On your computer this may be differ
 With the drive name determined substitute it into the following command:
 
 ```bash
-dd if=~/Downloads/usb_drive_disk_image-release-0.9.0.img of=/dev/<name of your drive>
+sudo dd if=~/Downloads/usb_drive_disk_image-release-0.9.0.img of=/dev/<name of your drive>
 ```
 
 By default the dd command does not return any progress indicator while it is running.  On MacOS you can press `<control>-T` to show progress and on linux you can add `status=progress` to the command (eg `dd if=disk.img of=/dev/<name of your drive> status=progress`).
 
-The dd command can be expected to take many minutes to run. When it finishes the drive image will have been written to the USB stick.
+The dd command can be expected to take up to 45 minutes to run, with it being faster or slower depending on the speed of your USB stick. When it finishes the drive image will have been written to the USB stick.
 
 
 ## Boot the Computer Using the USB Stick
