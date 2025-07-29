@@ -48,11 +48,11 @@ The disk image and the files used to validate it can be downloaded from Google D
 
 The TL;DR instructions: Download the disk image, validate it, put it on a USB stick that is at least 16GB in size, boot from it, allow the setup script to run, enjoy.
 
-The mmuch more thorough and better explained version of the Disk Image instructions can be found at [README-using_the_disk_image.md](README-using_the_disk_image.md).
+The much more thorough and better explained version of the Disk Image instructions can be found at [README-using_the_disk_image.md](README-using_the_disk_image.md).
 
 ### The Recipe
 
-The recipe describes the steps used to create the disk image that can be downloaded above. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large). By following this recipe you will be able vet the steps taken and create your own disk image with any customisations you require.
+The recipe describes the steps used to create the disk image that can be downloaded above. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large). By following this recipe you will be able to vet the steps taken and create your own disk image with any customisations you require.
 
 #### Preparation
 
@@ -64,20 +64,21 @@ You will need:
 
 #### Boot the Linux Mint Debian Edition Installer
 
-The first step is to boot your computer with the Linux Mint Debian Installer USB stick. Every computer has a special keyboard key that can to be pressed shortly after turning it on that will allow it boot from USB. The Linux Mint installation instructions have a [good write-up](https://linuxmint-installation-guide.readthedocs.io/en/latest/boot.html) on how to determine which key to press for your computer. On a Dell, for instance, pressing F12 after powering it on brings up the Boot Options menu.
+The first step is to boot your computer with the Linux Mint Debian Installer USB stick. Every computer has a special keyboard key that can to be pressed shortly after turning it on that will allow it to boot from USB. The Linux Mint installation instructions have a [good write-up](https://linuxmint-installation-guide.readthedocs.io/en/latest/boot.html) on how to determine which key to press for your computer. On a Dell, for instance, pressing F12 after powering it on brings up the Boot Options menu.
 
 <img alt="A screenshot of the Linux Mint desktop as seen after first booting. The icon for launching the terminal is circled in red." src="https://github.com/user-attachments/assets/0cfc5f2d-dd7d-40e3-be80-9c1cdabc1e1f " width="100%">
 
-The Linux Mint installer desktop. Note the circled icon for the terminal in the bottom left, click on this to open the terminal. This is where we will be working and the commands given below are to be entered into the terminal. If you are like most computer users you probably do not use the terminal (or command line interface) very often. Resist the urge to be intimidated, you've got this and we are here to help. In most cases you will be able to cut and paste the instructions directly from this document into the terminal and have them work as expected.
+The Linux Mint installer desktop. Note the circled icon for the terminal in the bottom left, click on this to open the terminal. This is where we will be working and the commands given below are to be entered into the terminal.
 
 #### Determine the Target USB Drive Letter
 
 [!CAUTION]
+
 Do not attach the Target USB stick (the one you want to install onto) until instructed to do so. A possible source of errors is writing to the wrong USB stick or drive, so we always want to make sure we know which one is our Target USB stick. The easiest way to do this is to observe the list of drives before and after the Target USB stick has been plugged in.
 
 Open a terminal window. To do this either click on the icon circled in the screenshot above or press the Windows button on your keyboard and type 'terminal' followed by Enter. Either will result in a window like the one shown below opening.
 
-<img width="100%" alt="A screenshot showing the terminal window" src="https://github.com/user-attachments/assets/00e8acd9-d996-4a88-b4ea-fc8893f4c183" />
+<img width="100%" alt="Screenshot shoting an open terminal window" src="https://github.com/user-attachments/assets/6fabdc32-4454-4a5b-ae14-d6671fdeeb4d" />
 
 If you are like most computer users you probably don't use a terminal (or command line interface) very often. Resist the urge to be intimidated, you've got this! In most cases you will be able to cut and paste the instructions directly from this document into the terminal and have them work as expected.
 
@@ -91,7 +92,7 @@ This will result in output that will look similar to the following screenshot.
 
 <img width="100%" alt="A screenshot showing sample output of the command ls -l /dev/sd*" src="https://github.com/user-attachments/assets/16b1fa01-ea72-4e8c-883e-3ae78d1f8c96" />
 
-The sameple output shown above shows a single drive (/dev/sda) with two partitions (sda1 and sda2). You may see additional drivess in your output, this is normal and not a problem.
+The sameple output shown above shows a single drive (/dev/sda) with two partitions (sda1 and sda2). You may see additional drives in your output, this is normal and not a problem.
 
 Now insert the Target USB stick and run the `ls -l /dev/sd*` command again, comparing the output against the earlier output. You will see a new drive listed.
 
@@ -99,7 +100,7 @@ Now insert the Target USB stick and run the `ls -l /dev/sd*` command again, comp
 
 In the example shown above the Target USB stick is the newly listed drive /dev/sdb. In this example the Target USB stick has 4 existing partitions. Yours will likely have a different number. The number of partitions is not important, what is important is the name of the drive. In the example shown above this is /dev/sdb, yours may be different.
 
-It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from reboot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or [email code@shitfuckery.ca](mailto:code@shitfuckery.ca) and I will do my best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
+It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from one boot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or open an issue here and we will do our best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
 
 [!IMPORTANT]
 
@@ -137,7 +138,7 @@ sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8
 ```
 ```bash
 sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP--change-name=4:rootfs /dev/sdTARGET
-````
+```
 
 #### Encrypt the USB Stick Partitions
 
@@ -145,9 +146,10 @@ We will be encrypting the 1st and 4th partitions, the ones used for the boot and
 
 We will be using LUKS version 1 to format the boot partition because GRUB, the bootloader we will be using, is able to decrypt LUKS v1 partitions, but not LUKS v2. GRUB needs to be able to decrypt the boot partition in order to load the kernel and the encryption key that is in turn used to decrypt the root partition.
 
-When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions. While it is technically possible not to, little if anything is gained and it is dramatically less convenient.
+When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions.
 
-[!NOTE}]
+[!NOTE]
+
 Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
 
 ```bash
@@ -210,14 +212,14 @@ sudo btrfs subvolume create @snapshots
 sudo btrfs subvolume list .
 ```
 
-The last command above will list the subvolumes and a subvolume ID. Use the subvolume ID for the @ subvolume from the previous command for the following command so as to set the @ subvolume as the default:
+The last command above will list the subvolumes and a subvolume ID. Use the subvolume ID for the @ subvolume from the previous command for the following command so as to set the @ subvolume as the default. We are using 256 as an example:
 
 
 ```bash
 sudo btrfs subvolume set-default 256 .
 ```
 
-Use the following commands to umount the root root partition:
+Use the following commands to umount the root partition:
 
 ```bash
 cd /
@@ -281,7 +283,7 @@ The screenshot above shows the manual partitioning screen. **Click the Expert Mo
 
 <img width="100%" alt="A screenshot showing the Manual Partitioning Expert Mode screen." src="https://github.com/user-attachments/assets/c554a2c1-e022-4c50-92a6-5a2cf0bf6690" />
 
-The screenshot above shows the manuap partitioning expert mode screen. The installation process will pause at this screen so that we can manually mount the various filesystems we created earlier. At this point switch back to the terminal window by either pressing `<alt><tab>` or by clicking on the terminal icon at the bottom left of the screen. Then, because the installer will have been started from this terminal instance, click on the tab to switch to the other terminal instance.
+The screenshot above shows the manual partitioning expert mode screen. The installation process will pause at this screen so that we can manually mount the various filesystems we created earlier. At this point switch back to the terminal window by either pressing `<alt><tab>` or by clicking on the terminal icon at the bottom left of the screen. Then, because the installer will have been started from this terminal instance, click on the tab to switch to the other terminal instance.
 
 We will create a directory called /target and mount the various filesystems we created earlier under it using the following commands:
 
@@ -344,7 +346,7 @@ At this point switch back to the installer window and click on the Next button i
 
 After deselecting the GRUB installation checkbox click on the Next button.
 
-The next screen will show a summary of the configuration like the screenshot below. Review yours to make sure it is accurate.  It is important that the “Filesystem operations” match the screenshot. If anything looks amis you the Back button to go back and make whatever changes are necessary.
+The next screen will show a summary of the configuration like the screenshot below. Review yours to make sure it is accurate.  It is important that the “Filesystem operations” match the screenshot. If anything looks amis use the Back button to go back and make whatever changes are necessary.
 
 <img width="100%" alt="A screenshot showing the installation configuation summary." src="https://github.com/user-attachments/assets/475e8b8a-f730-4c0d-977a-6a3001350701" />
 
@@ -358,7 +360,7 @@ At this point we will finalise the installation by manually creating the fstab a
 
 #### Create /etc/fstab File
 
-The file /etc/fstab describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab` or clicking on the terminal icon and enter the following commands:
+The file /etc/fstab describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab>` or clicking on the terminal icon and enter the following commands:
 
 ```bash
 sudo bash -c “echo ‘PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1’ >> /target/etc/fstab”
@@ -497,7 +499,7 @@ If you would like to add any additional software you can install it now using th
 
 #### Exit the chroot
 
-To continue the next steps we will need to excit the chroot by using the following command:
+To continue the next steps we will need to exit the chroot by using the following command:
 
 ```bash
 exit
@@ -505,7 +507,7 @@ exit
 
 #### Automate System Set-Up
 
-In order to simplify the system set-up process for the end user a setup script has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set that up.
+In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set that up.
 
 Download the setup script and a second file that will automatically start it using the following commands:
 
@@ -536,7 +538,7 @@ sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.conf
 
 You can customise the configuration of future user accounts by adding the custom configuration to the /target/etc/skel directory. Files in this directory will be copied to the home directory of any future users, such as the one the setup.sh script creates.
 
-In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes I need a reminder.
+In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder.
 
 Download the [gist](https://gist.github.com/beanjammin/1a3978ce41b9a621ef84075047deffb8) with the following command:
 
