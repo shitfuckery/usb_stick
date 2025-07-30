@@ -533,6 +533,15 @@ sudo mv /home/mint/Downloads/setup.sh /target/home/setup/setup.sh
 sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.config/autostart/
 ```
 
+Allow setup.sh to be run as root with sudo without requiring a password. Note the use of a wildcard for the user's home directory. This is so that the new user account created during the setup process is also able to run setup.sh as root. This file is automatically removed at the end of the setup process by setup.sh.
+
+```bash
+sudo bash -c "echo '%sudo	ALL=(ALL:ALL) NOPASSWD:/home/*/setup.sh' > /target/etc/sudoers.d/setup"
+```
+```bash
+sudo chmod 440 /target/etc/sudoers.d/setup
+```
+
 
 #### Customise Configuration
 
