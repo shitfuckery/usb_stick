@@ -524,10 +524,19 @@ wget https://github.com/shitfuckery/usb_stick/raw/refs/heads/main/setup/.config/
 Enable the automatic running of the setup.sh script by moving the two downloaded files into the correct locations:
 
 ```bash
-sudo mkdir -p /target/home/setup/.config/autostart/
+sudo mkdir -p /target/home/setup/.config/autostart /target/etc/skel/.config/autostart
+```
+```bash
+sudo cp /home/mint/Downloads/setup.sh /target/etc/skel/setup.sh
 ```
 ```bash
 sudo mv /home/mint/Downloads/setup.sh /target/home/setup/setup.sh
+```
+```bash
+sudo chmod 755 /target/home/setup/setup.sh /target/etc/skel/setup.sh
+```
+```bash
+sudo cp /home/mint/Downloads/USB\ System\ Setup.desktop /target/etc/skel/.config/autostart/
 ```
 ```bash
 sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.config/autostart/
