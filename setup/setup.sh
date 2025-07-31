@@ -120,18 +120,16 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 
 	echo ""
 	echo ""
-	echo "The first step is update the passphrase used to decrypt the USB stick."
+	echo "The first step is to update the passphrase used to decrypt the USB stick."
 	echo "It is the passphrase asked for when the USB stick is first booted. This"
 	echo "must be a strong passphrase that you will remember. If this passphrase"
 	echo "is lost it will be impossible to recover your files."
 	echo ""
-	echo "Often a nonsensical phrase (eg Blue tigers glow in the dark - DO NOT USE THIS)"
+	echo "Often a nonsensical phrase (eg Blue tigers glow in the dark - DO NOT USE THIS!)"
 	echo "is easier to remember and more secure than a complicated but shorter password."
+	echo ""
 
 	enter_pass "Enter a storage encryption passphrase"
-	if [ ${pass1} = "Blue tigers glow in the dark" ]; then
-		enter_pass "Enter a storage encryption passphrase"
-	fi
 	DRIVEPASSPHRASE=${pass1}
 
 	echo ""
@@ -178,7 +176,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
 	umount /boot
 	cryptsetup close /dev/mapper/LUKS_BOOT
 	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --key-file - --key-slot 2 ${DRIVEDEVICE}1
-	cryptsetup open ${DRIVEDEVICE}1 LUKS_BOOT
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup open ${DRIVEDEVICE}1 LUKS_BOOT
 	mount /dev/mapper/LUKS_BOOT /boot
 	mount ${DRIVEDEVICE}3 /boot/efi
 
@@ -223,7 +221,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB ]; then
 	echo "Updating crypttab to use the new keyfile..."
 
 	# Update crypttab to use the new keyfile
-	sed -i 's/${OLDKEY}/${KEYFILE}/g' /etc/crypttab
+	sed -i "s/${OLDKEY//\//\\/}/${NEWKEY//\//\\/}/g" /etc/crypttab
 	touch ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB
 
 fi
