@@ -76,7 +76,7 @@ KEYFILE="/etc/luks/personalised-boot_os.keyfile";
 RESUME_DEV="/dev/mapper/LUKS_SWAP";
 OLDPASS="setup";
 OLDKEY="/etc/luks/boot_os.keyfile";
-BITWARDEN_DEB="/home/setup/Bitwarden-2025.6.0-amd64.deb";
+BITWARDEN_DEB="/home/setup/Bitwarden-2025.7.0-amd64.deb";
 
 SETUP_PROGRESS=".setup_progress";
 SETUP_HDPASS="hd_pass";
@@ -174,12 +174,15 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
 	# We reencrypting the boot and root partitions so that the underlying
 	# volume key is unique to this particular USB stick.
 	# LUKS1, used on boot to be compatible with GRUB, can not be reencrypted while open.
+	umount /boot/efi
 	umount /boot
-	cryptsetup close /dev/mapper/USB_BOOT
+	cryptsetup close /dev/mapper/LUKS_BOOT
 	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --key-file - --key-slot 2 ${DRIVEDEVICE}1
-	cryptsetup open ${DRIVEDEVICE}1 USB_BOOT
-	mount /dev/mapper/USB_BOOT /boot
+	cryptsetup open ${DRIVEDEVICE}1 LUKS_BOOT
+	mount /dev/mapper/LUKS_BOOT /boot
+	mount ${DRIVEDEVICE}3 /boot/efi
 
+	# LUKS2 can be reencrypted while mounted and in use.
 	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --key-file - --key-slot 2 ${DRIVEDEVICE}4
 
 	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
@@ -203,10 +206,10 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]; then
 
 	# Add new keyfile
 	echo "Adding new key to boot..."
-	cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}1 $KEYFILE
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup luksAddKey --key-file - --new-keyfile $KEYFILE ${DRIVEDEVICE}1 $KEYFILE
 
 	echo "Adding new key to root..."
-	cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}4 $KEYFILE
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup luksAddKey --key-file - --new-keyfile $KEYFILE ${DRIVEDEVICE}4 $KEYFILE
 
 	touch ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE
 
