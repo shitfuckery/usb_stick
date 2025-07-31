@@ -13,7 +13,7 @@ set -e
 #    enough swap to allow hibernation if size allows    #
 #  - disable the setup user                             #
 #  - install additional software if necessary           #
-#  - remove the setup user                              #
+#  - remove the setup user and related config           #
 #                                                       #
 # For testing start this script with gnome-terminal:    #
 #    /home/setup/setup.sh                               #
@@ -38,6 +38,7 @@ function enter_pass () {
 			echo ""
 			echo ""
 			echo "${PWCHECK}"
+			echo ""
 			enter_pass "${1}"
 		else
 			return 0
@@ -48,9 +49,25 @@ function enter_pass () {
 		echo ""
 		echo ""
                 echo "Sorry, they did not match. Please try again."
+		echo ""
                 enter_pass "${1}"       
 
         fi
+}
+
+
+function enter_text () {
+
+	read -r -p "${1}: " text
+
+	if [ "${text}" =~ ${2} ]; then
+		return 0
+	else
+		echo "${3}"
+		echo ""
+		enter_text "${1}" "${2}" "${3}"
+	fi
+
 }
 
 
@@ -65,9 +82,11 @@ SETUP_PROGRESS=".setup_progress";
 SETUP_HDPASS="hd_pass";
 SETUP_HDKEYFILE="hd_keyfile";
 SETUP_CRYPTTAB="update_crypttab";
+SETUP_REENCRYPT="reencrypt";
 SETUP_RMSETUPPASS="rm_setuppass";
 SETUP_RMSETUPKEYFILE="rm_setupkeyfile";
 SETUP_ADDUSER="add_user";
+SETUP_HOSTNAME="hostname";
 SETUP_GROWFS="grow_filesystem";
 SETUP_DISABLESETUP="setup_login_disabled";
 SETUP_PASSECHO="disable_password_echo";
@@ -96,131 +115,126 @@ if [ ! -d ~/$SETUP_PROGRESS ]; then
 
 fi
 
-
-if [[ -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]] && [[ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]]; then
-
-	# The script was stopped or otherwise failed between setting the new encryption key
-	# and the new encryption passphrase. Unfortunately this situation can not be recovered
-	# from.
-	echo ""
-	echo "Unfortunately this script was run earlier and stopped or otherwise failed while updating the"
-	echo "filesystem encryption. This has left the USB stick in an unrecoverable state."
-	echo ""
-	echo "You will need to start over by writing a fresh copy of the disk image to your USB stick."
-	exit;
-fi
 	
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 
-	echo "The first passphrase will be used to encrypt the storage and will be"
-	echo "needed every time you boot a computer from this USB stick. This"
-	echo "must be a strong passphrase that you will remember. If this passphrase"
-	echo "is lost it will be impossible to recover any files from the system."
 	echo ""
-	echo "Often a nonsensical phrase is easier to remember and more secure than"
-	echo "a complicated but shorter password."
+	echo ""
+	echo "The first step is update the passphrase used to decrypt the USB stick."
+	echo "It is the passphrase asked for when the USB stick is first booted. This"
+	echo "must be a strong passphrase that you will remember. If this passphrase"
+	echo "is lost it will be impossible to recover your files."
+	echo ""
+	echo "Often a nonsensical phrase (eg Blue tigers glow in the dark - DO NOT USE THIS)"
+	echo "is easier to remember and more secure than a complicated but shorter password."
 
 	enter_pass "Enter a storage encryption passphrase"
+	if [ ${pass1} = "Blue tigers glow in the dark" ]; then
+		enter_pass "Enter a storage encryption passphrase"
+	fi
 	DRIVEPASSPHRASE=${pass1}
 
 	echo ""
+	echo ""
 	echo "Please take a moment to record that passphrase somewhere safe."
-	echo ""
-	echo "The next questions are for your account on the operating system."
-	echo "You will need this username/password combination to log into your"
-	echo "user account."
-	echo ""
-	read -p "Please enter a username: " USERNAME
-
-	enter_pass "Please enter a user account password" 
-	PASSWORD=${pass1}
-
-	echo ""
-	echo "Thank-you."
-	echo ""
-	echo "Last step!"
-	read -p "Please enter a name for your computer: " HOSTNAME
-
-	echo "One moment while things are set up."
-	echo ""
-	echo "Most of what follows can be safely ignored."
-	sleep 5
 
 	CHANGES=1
 
+	echo ""
 	echo "Updating drive encryption with your new passphrase..."
-
-	# In other places we set the progress tracker at the end of the step, however here
-	# we set it at the beginning because as soon as the filesystem encryption changes
-	# are started they must be fully completed. If the script stops during the encryption
-	# changes the USB stick will be left in an unusable state.
-	touch ~/$SETUP_PROGRESS/$SETUP_HDPASS
 
 	# Encrypt the drive with the user's passphrase - using named pipe to provide the
 	# existing password. 
-	echo "Encrypting the boot partition..."
+	echo "Adding passphrase to the boot partition..."
 	mkfifo pipe 
 	echo -n "${OLDPASS}" | cryptsetup luksAddKey --key-file - ${DRIVEDEVICE}1 pipe &
 	echo -n "${DRIVEPASSPHRASE}" > pipe
 	rm pipe
 
-	echo "Encrypting the root partition..."
+	echo "Adding passphrase to the root partition..."
 	mkfifo pipe
 	echo -n "${OLDPASS}" | cryptsetup luksAddKey --key-file - ${DRIVEDEVICE}4 pipe &
 	echo -n "${DRIVEPASSPHRASE}" > pipe
 	rm pipe
 
-
-	if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]; then
-		
-		CHANGES=1
-
-		echo "Updating the keyfile associated with your encrypted drive..."
-
-		if [ ! -f $KEYFILE ]; then
-
-			# Create the keyfile
-			dd if=/dev/urandom of=$KEYFILE bs=4096 count=1
-			chmod 400 $KEYFILE
-
-		fi
-
-		# Add new keyfile
-		echo "Adding new key to boot..."
-		cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}1 $KEYFILE
-
-		echo "Adding new key to root..."
-		cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}4 $KEYFILE
-
-		touch ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE
-
-	fi
-
-	if [ ! -f ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB ]; then
-
-		CHANGES=1
-
-		echo "Updating crypttab to use the new keyfile..."
-
-		# Update crypttab to use the new keyfile
-		sed -i 's/boot_os.keyfile/personalised-boot_os.keyfile/g' /etc/crypttab
-		touch ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB
-
-	fi
+	touch ~/$SETUP_PROGRESS/$SETUP_HDPASS
 
 fi
+
+
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]; then
+		
+	CHANGES=1
+
+	echo "Adding an encryption keyfile unique to this USB stick..."
+
+	if [ ! -f $KEYFILE ]; then
+
+		# Create the keyfile
+		dd if=/dev/urandom of=$KEYFILE bs=4096 count=1
+		chmod 400 $KEYFILE
+
+	fi
+
+	# Add new keyfile
+	echo "Adding new key to boot..."
+	cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}1 $KEYFILE
+
+	echo "Adding new key to root..."
+	cryptsetup luksAddKey --key-file $OLDKEY --new-keyfile $KEYFILE ${DRIVEDEVICE}4 $KEYFILE
+
+	touch ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE
+
+fi
+
+
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB ]; then
+
+	CHANGES=1
+
+	echo "Updating crypttab to use the new keyfile..."
+
+	# Update crypttab to use the new keyfile
+	sed -i 's/${OLDKEY}/${KEYFILE}/g' /etc/crypttab
+	touch ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB
+
+fi
+
+
+
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
+
+	CHANGES=1
+
+	echo ""
+	echo "Reencrypting the drive so that the underltying volume key is unique to this USB stick."
+	echo "This will take a few minutes..."
+	echo ""
+
+	# We reencrypting the boot and root partitions so that the underlying
+	# volume key is unique to this particular USB stick.
+	# LUKS1, used on boot to be compatible with GRUB, can not be reencrypted while mounted
+	umount /boot
+	cryptsetup reencrypt --key-file ${OLDKEY} --key-slot 1 /dev/sda1
+	mount /boot
+	cryptsetup reencrypt --key-file ${OLDKEY} --key-slot 1 /dev/sda4
+
+	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
+
+fi
+
 
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPPASS ]; then
 
 	CHANGES=1
 
-	echo "Removing the default passphrase from your drive..."
+	echo "Removing the default encyrption passphrase..."
 
 	# Remove the original drive passphrase. 
-	echo "Removing the default pass from boot..."
+	echo "Removing the default passphrase from boot..."
 	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}1 0 
 
-	echo "Removing the default pass from root..."
+	echo "Removing the default passphrase from root..."
 	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}4 0 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_RMSETUPPASS
@@ -231,7 +245,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPKEYFILE ]; then
 
 	CHANGES=1
 
-	echo "Removing the default keyfile from your drive..."
+	echo "Removing the default encryption keyfile..."
 
 	# Remove the original setup keyfile 
 	echo "Removing the default key from boot..."
@@ -246,6 +260,8 @@ fi
 
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_ADDUSER ]; then
 
+	CHANGES=1
+
 	echo ""
 	echo ""
 	echo ""
@@ -260,30 +276,38 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_ADDUSER ]; then
 	PASSWORD=${pass1}
 
 	echo ""
+	echo "Creating your new user account..."
+	echo ""
 	echo "Please record your account information somewhere safe."
 	sleep 5	
-	echo ""
-	echo "Last step!"
-	echo "Your computer needs a name to identify itself when it is on a network."
-	echo "The name may contain letters, numbers, and hyphens and cannot start with a hyphen."
-	read -p "Please enter a name for your computer: " HOSTNAME
-
-	echo "One moment while things are set up."
-	echo ""
-	echo ""
-
-	CHANGES=1
-
-	echo "Creating your new user account..."
 
 	# Add new user account
 	useradd -m --groups sudo -s /bin/bash -p `openssl passwd -6 "$PASSWORD"` $USERNAME 
 
-	# Update hostname and make it our own
+	touch ~/$SETUP_PROGRESS/$SETUP_ADDUSER
+
+fi
+
+
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HOSTNAME ]; then
+
+	CHANGES=1
+
+	echo "Your computer needs a name to identify itself when it is on a network."
+	echo "The name may contain letters, numbers, and hyphens and cannot start with a hyphen."
+
+	enter_text "Please enter a name for your computer" "^[^\-][a-zA-Z0-9-]{1,}$" "The name may contain only letters, numbers, and hyphens AND must not start with a hyphen."
+	HOSTNAME=${text}
+
+	echo ""
+	echo "Updating the hostname..."
+	echo ""
+
 	echo "${HOSTNAME}" > /etc/hostname
 	hostname $HOSTNAME
 
-	touch ~/$SETUP_PROGRESS/$SETUP_ADDUSER
+	touch ~/$SETUP_PROGRESS/$SETUP_HOSTNAME
+
 
 fi
 
