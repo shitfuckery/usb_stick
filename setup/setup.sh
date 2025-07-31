@@ -162,6 +162,31 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 fi
 
 
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
+
+	CHANGES=1
+
+	echo ""
+	echo "Reencrypting the drive so that the underltying volume key is unique to this USB stick."
+	echo "This will take a few minutes..."
+	echo ""
+
+	# We reencrypting the boot and root partitions so that the underlying
+	# volume key is unique to this particular USB stick.
+	# LUKS1, used on boot to be compatible with GRUB, can not be reencrypted while open.
+	umount /boot
+	cryptsetup close /dev/mapper/USB_BOOT
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --key-file - --key-slot 2 ${DRIVEDEVICE}1
+	cryptsetup open ${DRIVEDEVICE}1 USB_BOOT
+	mount /dev/mapper/USB_BOOT /boot
+
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --key-file - --key-slot 2 ${DRIVEDEVICE}4
+
+	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
+
+fi
+
+
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]; then
 		
 	CHANGES=1
@@ -197,29 +222,6 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB ]; then
 	# Update crypttab to use the new keyfile
 	sed -i 's/${OLDKEY}/${KEYFILE}/g' /etc/crypttab
 	touch ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB
-
-fi
-
-
-
-if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
-
-	CHANGES=1
-
-	echo ""
-	echo "Reencrypting the drive so that the underltying volume key is unique to this USB stick."
-	echo "This will take a few minutes..."
-	echo ""
-
-	# We reencrypting the boot and root partitions so that the underlying
-	# volume key is unique to this particular USB stick.
-	# LUKS1, used on boot to be compatible with GRUB, can not be reencrypted while mounted
-	umount /boot
-	cryptsetup reencrypt --key-file ${OLDKEY} --key-slot 1 /dev/sda1
-	mount /boot
-	cryptsetup reencrypt --key-file ${OLDKEY} --key-slot 1 /dev/sda4
-
-	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
 
 fi
 
