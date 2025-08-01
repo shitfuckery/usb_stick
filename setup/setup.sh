@@ -60,7 +60,7 @@ function enter_text () {
 
 	read -r -p "${1}: " text
 
-	if [ "${text}" =~ ${2} ]; then
+	if [[ "${text}" =~ ${2} ]]; then
 		return 0
 	else
 		echo "${3}"
