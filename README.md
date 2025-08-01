@@ -507,7 +507,7 @@ exit
 
 #### Automate System Set-Up
 
-In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set that up.
+In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
 
 Download the setup script and a second file that will automatically start it using the following commands:
 
@@ -556,7 +556,8 @@ sudo chmod 440 /target/etc/sudoers.d/setup
 
 You can customise the configuration of future user accounts by adding the custom configuration to the /target/etc/skel directory. Files in this directory will be copied to the home directory of any future users, such as the one the setup.sh script creates.
 
-In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder.
+In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder. You could of course do more useful things, like configure software in a particular way, such as disabling third-party cookies in the browsers, enabling a default VPN, pinning particular applications to the task bar, etc.
+
 
 Download the [gist](https://gist.github.com/beanjammin/1a3978ce41b9a621ef84075047deffb8) with the following command:
 
@@ -569,3 +570,25 @@ Now add the gistfile contents to the end of the /target/etc/skel/.bashrc file wi
 ```bash
 sudo bash -c "cat gistfile1.txt >> /target/etc/skel/.bashrc
 ```
+
+Set the Hostname
+
+```bash
+sudo echo "usbstick-setup" > /target/etc/hostname
+```
+
+Download Bitwarden and make it available.
+
+The last bit of customisation to finish off the recipe is the installation of the Bitwarden Linux client. While it's great that Bitwarden provide the Linux client in a .deb format, unfortunately it is not in a proper repository so it can not be installed with apt-get.  Additionally the download process requires javascript, so we can not easily script it's download, so it has to be done manually.
+
+Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2025.7.0-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
+
+```bash
+sudo cp ~/Downloads/Bitwarden-2025.7.0-amd64.deb /target/home/setup/
+```
+
+As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
+
+In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing a permissions functionality, but with a GNU AGPLv3 license.
+
+Congratulations, you are done!

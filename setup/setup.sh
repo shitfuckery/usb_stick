@@ -221,45 +221,11 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB ]; then
 	echo "Updating crypttab to use the new keyfile..."
 
 	# Update crypttab to use the new keyfile
-	sed -i "s/${OLDKEY//\//\\/}/${NEWKEY//\//\\/}/g" /etc/crypttab
+	sed -i "s/${OLDKEY//\//\\/}/${KEYFILE//\//\\/}/g" /etc/crypttab
 	touch ~/$SETUP_PROGRESS/$SETUP_CRYPTTAB
 
 fi
 
-
-if [ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPPASS ]; then
-
-	CHANGES=1
-
-	echo "Removing the default encyrption passphrase..."
-
-	# Remove the original drive passphrase. 
-	echo "Removing the default passphrase from boot..."
-	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}1 0 
-
-	echo "Removing the default passphrase from root..."
-	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}4 0 
-
-	touch ~/$SETUP_PROGRESS/$SETUP_RMSETUPPASS
-
-fi
-
-if [ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPKEYFILE ]; then
-
-	CHANGES=1
-
-	echo "Removing the default encryption keyfile..."
-
-	# Remove the original setup keyfile 
-	echo "Removing the default key from boot..."
-	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}1 1
-
-	echo "Removing the default key from root..."
-	cryptsetup luksKillSlot --key-file $KEYFILE ${DRIVEDEVICE}4 1
-
-	touch ~/$SETUP_PROGRESS/$SETUP_RMSETUPKEYFILE
-
-fi
 
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_ADDUSER ]; then
 
@@ -311,8 +277,8 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HOSTNAME ]; then
 
 	touch ~/$SETUP_PROGRESS/$SETUP_HOSTNAME
 
-
 fi
+
 
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_GROWFS ]; then
 
@@ -404,8 +370,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_GROWFS ]; then
 
 	# Mark section complete
 	touch ~/$SETUP_PROGRESS/$SETUP_GROWFS
-		
-
+	
 fi
 
 
@@ -490,6 +455,7 @@ if [ -f $BITWARDEN_DEB ]; then
 	rm -f $BITWARDEN_DEB
 
 fi
+
 
 # Remove setup user if there are no processes owned by setup
 SETUPPROCESSES=`ps aux | awk ' { print $1 } ' | grep setup | wc -l`
