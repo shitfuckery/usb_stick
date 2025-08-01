@@ -588,4 +588,50 @@ As the version number is bound to have changed, be sure to update the BITWARDEN 
 
 In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing a permissions functionality, but with a GNU AGPLv3 license.
 
-Congratulations, you are done!
+
+#### Creating the Disk Image
+
+We will use the program dd to create a disk image file of the USB drive. To do that we need to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
+
+```bash
+sudo sgdisk --print /dev/sdTARGET
+```
+
+SCREENSHOT SHOWING OUTPUT from sgdisk --print /dev/TARGET
+
+Based on the information shown above we know that the last partition ends at sector 17408000 and that each sector is 512 bytes in size. We will need an additional 34 sectors at the end of the disk image to accomodate the backup GPT header and partition table. If you changed the size of your root partition your numbers will be different so make sure you substitute them in the dd command below.
+
+Now is also a time to consider where you want to save the resulting disk image file. You can create it on the Linux Mint installer, but will need to save it to somewhere else. This could be to a fileserver, online storage, or similar. You could also plug the USB stick into a different computer and make the disk image there. In the command below you will see that I am piping the output of dd via ssh to another computer called fileserver.
+
+```bash
+sudo dd if=/dev/TARGET bs=512 count=17408034 status=progress | ssh myaccount@fileserver "dd of=usb_drive_disk_image.img"
+```
+
+We now create copies of the GPT backup header and partition table at the end of the disk image with the following commands. Following my example, where the disk image was saved to the fileserver, the following commands would be either run on the fileserver or the disk image would be moved to another machine to run these commands.
+
+```bash
+sudo sgdisk -e /path/to/usb_drive_disk_image.img
+```
+```bash
+sudo sgdisk -k /path/to/usb_drive_disk_image.img
+```
+```bash
+sudo sgdisk --print /path/to/usb_drive_disk_image.img
+```
+
+The last command should output a description of the usb_drive_disk_image.img file and it should not include any error messages.
+
+To further test the usb_drive_disk_image.img file write it to a USB drive with the following command and try booting a computer with it. Be sure to confirm the correct TARGET drive using the same method shown earlier, comparing before and after results of `ls -l /dev/sd*`
+
+```bash
+dd if=/path/to/usb_drive_disk_image.img of=/dev/sdTARGET status=progress
+```
+
+If everything went well you should have a working USB drive based system at this point. Congratulations!
+
+
+### Possible Next Steps
+
+If you are deploying multiple desktops across an organisation you may want to pair your desktops with self hosted services and have the desktop preconfigured to make use of those services or to bookmark them.  The types of services you may want to consider could include NextCloud, Whoogle, Vaultwarden, a VPN, MailCow, or others.
+
+Using free / open source tools it is possible to securely host tools that will be useful to your organisation.  Watch for a follow-up recipe for hosting such services.
