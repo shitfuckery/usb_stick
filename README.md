@@ -527,13 +527,10 @@ Enable the automatic running of the setup.sh script by moving the two downloaded
 sudo mkdir -p /target/home/setup/.config/autostart /target/etc/skel/.config/autostart
 ```
 ```bash
-sudo cp /home/mint/Downloads/setup.sh /target/etc/skel/setup.sh
+sudo cp /home/mint/Downloads/setup.sh /target/usr/local/bin/setup.sh
 ```
 ```bash
-sudo mv /home/mint/Downloads/setup.sh /target/home/setup/setup.sh
-```
-```bash
-sudo chmod 755 /target/home/setup/setup.sh /target/etc/skel/setup.sh
+sudo chmod 755 /target/usr/local/bin/setup.sh
 ```
 ```bash
 sudo cp /home/mint/Downloads/USB\ System\ Setup.desktop /target/etc/skel/.config/autostart/
@@ -542,10 +539,10 @@ sudo cp /home/mint/Downloads/USB\ System\ Setup.desktop /target/etc/skel/.config
 sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.config/autostart/
 ```
 
-Allow setup.sh to be run as root with sudo without requiring a password. Note the use of a wildcard for the user's home directory. This is so that the new user account created during the setup process is also able to run setup.sh as root. This file is automatically removed at the end of the setup process by setup.sh.
+Allow setup.sh to be run as root with sudo without requiring a password for users in the sudo group. This is done to allow the setup.sh script to be run automatically by both the setup user and also by the user account created during the setup process so that it can clean up after itself by removing the setup user once it is no longer necessary. This file is automatically removed at the end of the setup process by setup.sh.
 
 ```bash
-sudo bash -c "echo '%sudo	ALL=(ALL:ALL) NOPASSWD:/home/*/setup.sh' > /target/etc/sudoers.d/setup"
+sudo bash -c "echo '%sudo	ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/setup.sh' > /target/etc/sudoers.d/setup"
 ```
 ```bash
 sudo chmod 440 /target/etc/sudoers.d/setup

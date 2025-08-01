@@ -482,13 +482,38 @@ if [[ ${CHANGES} = 0 ]] && [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ${NONETWORK} = 
 	# running processes.  We're done!!
 
 	# Disable the automatic startup of setup.sh and the script itself.
-	rm -f /etc/skel/setup.sh
 	rm -f /etc/skel/.config/autostart/USB\ System\ Setup.desktop
 	rm -f /home/$SUDO_USER/.config/autostart/USB\ System\ Setup.desktop
-	rm -f /home/$SUDO_USER/setup.sh
+	rm -f /usr/local/bin/setup.sh
 
 	# Remove running of setup.sh from sudoers
 	rm -f /etc/sudoers.d/setup
+
+	# We are all done!
+	echo ""
+	echo ""
+	echo "We are all done!"
+	echo ""
+	echo "The setup user has been removed and the final steps have been completed."
+	echo "We hope you enjoy using your new encrypted USB stick based Mint Linux"
+	echo "system."
+	echo ""
+	read -p "Press Enter to finish."
+	exit 0
+
 fi
 
-# All done!
+# We are finished this particular run through the script, but the setup process
+# itself is not complete.
+
+echo ""
+echo ""
+echo "This run through the setup script is complete. You should now have a new"
+echo "passphrase set up for the encryption, a new user account, and the filesystem"
+echo "will be expanded to use your whole USB stick."
+echo ""
+echo "There are a few more setup steps to finish, so this script will run again"
+echo "when you log in with your new user account. Please log out and back in as"
+echo "your new user so that the setup process can be completed."
+echo ""
+read -p "Press enter to close this window."

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=gnome-terminal --title=SetUp -- sudo /home/setup/setup.sh
+Exec=gnome-terminal --title=SetUp -- sudo /usr/local/bin/setup.sh
 X-GNOME-Autostart-enabled=true
 NoDisplay=false
 Hidden=false
