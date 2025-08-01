@@ -1,6 +1,6 @@
 # The Shitfuckery USB Stick
 
-## A complete Linux Mint system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
+## A complete Linux Linux system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 

@@ -90,6 +90,7 @@ SETUP_HOSTNAME="hostname";
 SETUP_GROWFS="grow_filesystem";
 SETUP_DISABLESETUP="setup_login_disabled";
 SETUP_PASSECHO="disable_password_echo";
+SETUP_INSTALLNETSOFT="install_net_software"
 SETUP_INSTALLSOFT="setup_install_software";
 SETUP_RMSETUPUSER="rm_setupuser";
 
@@ -495,8 +496,7 @@ if [[ ${CHANGES} = 0 ]] && [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ${NONETWORK} = 
 	echo "We are all done!"
 	echo ""
 	echo "The setup user has been removed and the final steps have been completed."
-	echo "We hope you enjoy using your new encrypted USB stick based Mint Linux"
-	echo "system."
+	echo "We hope you enjoy using your Linux Mint on an encrypted USB stick!"
 	echo ""
 	read -p "Press Enter to finish."
 	exit 0
