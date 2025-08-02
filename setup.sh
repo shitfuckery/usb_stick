@@ -77,21 +77,19 @@ RESUME_DEV="/dev/mapper/LUKS_SWAP";
 OLDPASS="setup";
 OLDKEY="/etc/luks/boot_os.keyfile";
 BITWARDEN_DEB="/home/setup/Bitwarden-2025.7.0-amd64.deb";
-
 SETUP_PROGRESS=".setup_progress";
+
 SETUP_HDPASS="hd_pass";
+SETUP_REENCRYPT="reencrypt";
 SETUP_HDKEYFILE="hd_keyfile";
 SETUP_CRYPTTAB="update_crypttab";
-SETUP_REENCRYPT="reencrypt";
-SETUP_RMSETUPPASS="rm_setuppass";
-SETUP_RMSETUPKEYFILE="rm_setupkeyfile";
 SETUP_ADDUSER="add_user";
 SETUP_HOSTNAME="hostname";
 SETUP_GROWFS="grow_filesystem";
 SETUP_DISABLESETUP="setup_login_disabled";
 SETUP_PASSECHO="disable_password_echo";
 SETUP_INSTALLNETSOFT="install_net_software"
-SETUP_INSTALLSOFT="setup_install_software";
+SETUP_BITWARDEN="bitwarden";
 SETUP_RMSETUPUSER="rm_setupuser";
 
 CHANGES=0
@@ -439,7 +437,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT ]; then
 fi
 
 
-if [ -f $BITWARDEN_DEB ]; then
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_BITWARDEN ]; then
 
 	CHANGES=1
 
@@ -455,6 +453,8 @@ if [ -f $BITWARDEN_DEB ]; then
 	dpkg -i $BITWARDEN_DEB 
 	rm -f $BITWARDEN_DEB
 
+	touch ~/$SETUP_PROGRESS/$SETUP_BITWARDEN
+
 fi
 
 
@@ -469,7 +469,6 @@ if [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPUS
 	echo ""
 	echo "Removing setup user."
 	deluser --remove-home --quiet setup
-	delgroup --quiet setup
 	echo ""
 
 	touch ~/$SETUP_PROGRESS/$SETUP_RMSETUPUSER
@@ -477,7 +476,9 @@ if [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ! -f ~/$SETUP_PROGRESS/$SETUP_RMSETUPUS
 fi
 
 
-if [[ ${CHANGES} = 0 ]] && [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ${NONETWORK} = 0 ]]; then
+PROG=`ls ~/$SETUP_PROGRESS/ | wc -l`
+
+if [[ "${PROG}" = "12" ]]; then
 
 	# All the setup steps have been completed and the setup user does not have any
 	# running processes.  We're done!!
@@ -496,24 +497,23 @@ if [[ ${CHANGES} = 0 ]] && [[ ! ${SETUPPROCESSES} -gt 0 ]] && [[ ${NONETWORK} = 
 	echo "We are all done!"
 	echo ""
 	echo "The setup user has been removed and the final steps have been completed."
-	echo "We hope you enjoy using your Linux Mint on an encrypted USB stick!"
+	echo "We hope you enjoy using Linux Mint on an encrypted USB stick!"
 	echo ""
 	read -p "Press Enter to finish."
-	exit 0
+else
+	# We are finished this particular run through the script, but the setup process
+	# itself is not complete.
+
+	echo ""
+	echo ""
+	echo "This run through the setup script is complete. You should now have a new"
+	echo "passphrase set up for the encryption, a new user account, and the filesystem"
+	echo "will be expanded to use your whole USB stick."
+	echo ""
+	echo "There are a few more setup steps to finish, so this script will run again"
+	echo "when you log in with your new user account. Please log out and back in as"
+	echo "your new user so that the setup process can be completed."
+	echo ""
+	read -p "Press enter to close this window."
 
 fi
-
-# We are finished this particular run through the script, but the setup process
-# itself is not complete.
-
-echo ""
-echo ""
-echo "This run through the setup script is complete. You should now have a new"
-echo "passphrase set up for the encryption, a new user account, and the filesystem"
-echo "will be expanded to use your whole USB stick."
-echo ""
-echo "There are a few more setup steps to finish, so this script will run again"
-echo "when you log in with your new user account. Please log out and back in as"
-echo "your new user so that the setup process can be completed."
-echo ""
-read -p "Press enter to close this window."
