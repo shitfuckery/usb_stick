@@ -6,9 +6,13 @@
 
 ## Background
 
-Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment. One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was before.
+Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment? One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was, completely unchanged.
 
-This document is based on the excellent [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are; Mint is known for its ease of use while Kali is known for its technical sophistication, this recipe has a simplified creation process because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped, this recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user.
+This document stands on the shoulders of [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are:
+
+  *  Mint is known for its ease of use while Kali is known for its technical sophistication
+  *  This recipe is simplified because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped
+  *  This recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user
 
 ### What You Get
 
@@ -16,7 +20,7 @@ The end result will be a fully functional Linux Mint installation that will run 
 
 ### Why Linux Mint?
 
-Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the installation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
+Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. It basically just works and stays out of your way.  In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the installation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
 
 ### On Privacy, Security, And Trust
 
@@ -188,7 +192,7 @@ You may notice we have not formatted the /dev/sdTARGET2 partition. It will be us
 
 #### Setup Btrfs Subvolumes
 
-We are using btrfs for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
+We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
 
 ```bash
 sudo mount -o subvol=/ /dev/mapper/LUKS_ROOT /mnt
@@ -597,7 +601,7 @@ We will use the program dd to create a disk image file of the USB drive. To do t
 sudo sgdisk --print /dev/sdTARGET
 ```
 
-SCREENSHOT SHOWING OUTPUT from sgdisk --print /dev/TARGET
+<img width="100%" alt="Output of the command `sgdisk --print /dev/sdb`" src="https://github.com/user-attachments/assets/f30a080e-e3e7-47bd-aa9f-4cb6b9464513" />
 
 Based on the information shown above we know that the last partition ends at sector 17408000 and that each sector is 512 bytes in size. We will need an additional 34 sectors at the end of the disk image to accomodate the backup GPT header and partition table. If you changed the size of your root partition your numbers will be different so make sure you substitute them in the dd command below.
 
