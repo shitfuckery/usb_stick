@@ -42,9 +42,9 @@ There are two paths to an encrypted USB stick based system, you can either downl
 
 The disk image and the files used to validate it can be downloaded from Google Drive here:
 
-1. The Disk Image [usb_drive_disk_image-release-0.9.0.img](https://drive.google.com/file/d/1IcqVFhNwCa6Co5bCC9ergWz3HbWLb9WX/view?usp=sharing)
-2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.0.img.sha256sum](https://drive.google.com/file/d/1wv6HUucXcYjicNXm3N1yvQj2wu9YWpII/view?usp=sharing)
-3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.0.img.sha256sum.sig](https://drive.google.com/file/d/1xcYVQbNeAKmKepDZeLzVdngE3acpfezv/view?usp=sharing)
+1. The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
+2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
+3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
 
 The TL;DR instructions: Download the disk image, validate it, put it on a USB stick that is at least 16GB in size, boot from it, allow the setup script to run, enjoy.
 
