@@ -5,9 +5,9 @@ These instructions will walk you through the process of using the disk image lin
 ## Requirements
 
 *  The following 3 files downloaded to your computer:
-  1. The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
-  2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
-  3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
+   *  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
+   *  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
 *  A USB stick that is at least 16GB in size. A larger USB stick will provide more room for your own software and files. We typically use 128GB sticks, but the size you need will depend on the size of files you intend to use and how much additional software you intend to install.
 *  Windows users will need the program [Rufus](https://rufus.ie/en/) to put the disk image onto a USB stick.
 *  Gnu Privacy Guard (GPG) for confirming the integrity of the disk image.
@@ -194,6 +194,10 @@ A few seconds after you log in as the setup user a script will open a window lik
 <img width="100%" alt="Screenshot of the Linux Mint desktop shortly after the setup user has logged in for the first time." src="https://github.com/user-attachments/assets/b0ee77db-f765-4011-af37-b9645ed01247" />
 
 As you can see in the screenshot above, a warning about being low on disk space is expected. The setup script will grow the filesystem on your USB stick, which will give you access to the full size of your USB stick and get rid of this warning message.
+
+If you have access to an internet connection please set it up so that the script can install Tor, Signal, and Chromium. Click on the icon in the bottom right circled in red in the screenshot below to connect to wifi.
+
+<img width="100%" alt="A screenshot showing the wifi icon." src="https://github.com/user-attachments/assets/dd75b299-6349-463a-b274-b5823779c23c" />
 
 Enjoy your new Linux Mint on an encrypted USB stick!
 
