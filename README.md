@@ -76,9 +76,8 @@ The Linux Mint installer desktop. Note the circled icon for the terminal in the 
 
 #### Determine the Target USB Drive Letter
 
-[!CAUTION]
-
-Do not attach the Target USB stick (the one you want to install onto) until instructed to do so. A possible source of errors is writing to the wrong USB stick or drive, so we always want to make sure we know which one is our Target USB stick. The easiest way to do this is to observe the list of drives before and after the Target USB stick has been plugged in.
+> [!CAUTION]
+> Do not attach the Target USB stick (the one you want to install onto) until instructed to do so. A possible source of errors is writing to the wrong USB stick or drive, so we always want to make sure we know which one is our Target USB stick. The easiest way to do this is to observe the list of drives before and after the Target USB stick has been plugged in.
 
 Open a terminal window. To do this either click on the icon circled in the screenshot above or press the Windows button on your keyboard and type 'terminal' followed by Enter. Either will result in a window like the one shown below opening.
 
@@ -106,9 +105,8 @@ In the example shown above the Target USB stick is the newly listed drive /dev/s
 
 It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from one boot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or open an issue here and we will do our best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
 
-[!IMPORTANT]
-
-**Going forward these instructions will use /dev/sdTARGET in all commands referencing the Target USB stick. Please substitute the drive letter for TARGET (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after TARGET (eg /dev/sdTARGET3) which would be /dev/sdb3 in this example.**
+> [!IMPORTANT]
+> **Going forward these instructions will use /dev/sdTARGET in all commands referencing the Target USB stick. Please substitute the drive letter for TARGET (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after TARGET (eg /dev/sdTARGET3) which would be /dev/sdb3 in this example.**
 
 #### Partition the Target USB Stick
 
@@ -152,9 +150,8 @@ We will be using LUKS version 1 to format the boot partition because GRUB, the b
 
 When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions.
 
-[!NOTE]
-
-Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
+> [!NOTE]
+> Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
 
 ```bash
 sudo cryptsetup luksFormat --type=luks1 /dev/sdTARGET1
@@ -277,9 +274,8 @@ For the disk image we used 'setup' for the username, password, and computer name
 
 <img width="100%" alt="A screenshot showing the partitioning screen." src="https://github.com/user-attachments/assets/eb16762c-3f02-4b88-ba96-f34b1a92c5ac" />
 
-[!CAUTION]
-
-The screenshot above shows the partitioning screen. It is **very important that you select the Manual Partitioning option** otherwise the installer will write to the hard drive, overwriting whatever is on it, instead of the Target USB .
+> [!CAUTION]
+> The screenshot above shows the partitioning screen. It is **very important that you select the Manual Partitioning option** otherwise the installer will write to the hard drive, overwriting whatever is on it, instead of the Target USB .
 
 <img width="100%" alt="A screenshot showing the manual partitioning screen." src="https://github.com/user-attachments/assets/256b33b3-2903-47b3-ad83-3c8e9c1c9ff6" />
 
@@ -340,9 +336,8 @@ The items that start with /target in the right-most column are the ones we are i
 
 At this point switch back to the installer window and click on the Next button in the bottom right. This will take you to a screen like the one shown below.
 
-[!CAUTION]
-
- **It is very important that you deselect the checkbox circled in the screenshot below. A mistake here would overwrite the bootloader on the hard drive of the computer you are working on.**
+> [!CAUTION]
+> **It is very important that you deselect the checkbox circled in the screenshot below. A mistake here would overwrite the bootloader on the hard drive of the computer you are working on.**
 
  We will be manually installing the GRUB bootloader in order to pass the --removable option, which is required when installing to a USB stick and not available otherwise.
 
