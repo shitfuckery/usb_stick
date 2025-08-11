@@ -511,9 +511,10 @@ else
 	echo "will be expanded to use your whole USB stick."
 	echo ""
 	echo "There are a few more setup steps to finish, so this script will run again"
-	echo "when you log in with your new user account. Please log out and back in as"
+	echo "when you log in with your new user account. Please reboot and log back in as"
 	echo "your new user so that the setup process can be completed."
 	echo ""
-	read -p "Press enter to close this window."
+	read -p "Press enter to reboot now."
+	/usr/sbin/reboot
 
 fi
