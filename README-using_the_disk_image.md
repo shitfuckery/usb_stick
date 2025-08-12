@@ -5,9 +5,9 @@ These instructions will walk you through the process of using the disk image lin
 ## Requirements
 
 *  The following 3 files downloaded to your computer:
-   *  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
-   *  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
-   *  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
+   *  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/1793e18WW2609yOq_INA1Bd0K9OyXtkEO/view?usp=sharing)
+   *  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1sac3oDU_vMvkOMTa7jECM0f4dTM9r45S/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
 *  A USB stick that is at least 16GB in size. A larger USB stick will provide more room for your own software and files. We typically use 128GB sticks, but the size you need will depend on the size of files you intend to use and how much additional software you intend to install.
 *  Windows users will need the program [Rufus](https://rufus.ie/en/) to put the disk image onto a USB stick.
 *  Gnu Privacy Guard (GPG) for confirming the integrity of the disk image.
@@ -207,10 +207,33 @@ Enjoy your new Linux Mint on an encrypted USB stick!
 
 Like any newly set-up computer there will be a lot of updates to install. Updates can be installed by clicking on the shield icon in the lower right of the screen. Please take care of this as soon as possible. You can expect there to be quite a lot of updates to install. 
 
+<img width="100%" alt="Screenshot showing how to launch Update Manager" src="https://github.com/user-attachments/assets/817fc3ee-2855-4cc1-ae01-4516d73c69fc" />
+
+
+<img width="100%" alt="Screenshot showing the Update Manager" src="https://github.com/user-attachments/assets/d0ef85a9-9c6a-4ffa-a801-61cabfd476ec" />
+
+
 #### Install additional software
 
 There is a very wide selection of software for Linux Mint. Install the software you want. Make it your own.
 
+Launch the Software Manager under the "Start" menu.
+
+<img width="100%" alt="Screenshot showing how to launch Software Manager" src="https://github.com/user-attachments/assets/cf06be54-feee-4ad8-9aa0-ee13d0ad4d5c" />
+
+Then select the software you would like to install.
+
+<img width="100%" alt="Screenshot showing the launched Software Manager" src="https://github.com/user-attachments/assets/0f9b2ea7-a459-47c3-be1d-003f8d0a9ffa" />
+
+
 #### Explore
 
-Poke around and get to know your system and set it up the way you want it.
+Poke around and get to know your system and set it up the way you want it.  A good place to start is in the System Settings.
+
+<img width="100%" alt="Screenshot showing how to launch System Settings from under the 'Start' menu" src="https://github.com/user-attachments/assets/49c27a2f-449f-49ad-a9fe-1a2520729232" />
+
+A good place to start in System Settings is in enabling the firewall.
+
+<img width="2256" height="1504" alt="Screenshot from 2025-08-08 16-09-48" src="https://github.com/user-attachments/assets/05ea18ce-23e5-4f63-958f-81878f023daf" />
+
+Set the system up the way you want it.  Enjoy!

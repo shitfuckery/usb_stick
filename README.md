@@ -1,6 +1,6 @@
 # The Shitfuckery USB Stick
 
-## A complete Linux Linux system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
+## A complete Linux Mint system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 
@@ -16,19 +16,19 @@ This document stands on the shoulders of [Standalone Kali Linux 2021.4 Installat
 
 ### What You Get
 
-The end result will be a fully functional Linux Mint installation that will run from a removable encrypted USB stick. The stick can be used to boot any UEFI compatible computer with an Intel or AMD CPU. It will function exactly as if it was installed on a hard drive, in that software can be added or removed, customized in any way, and all configuration and data changes will persist across boots. This is accomplished by installing Linux Mint and the GRUB boot loader to the USB stick as if it was a normal hard drive.
+The end result will be a fully functional Linux Mint installation that will run from a removable encrypted USB stick. The stick can be used to boot any UEFI compatible computer with an Intel or AMD CPU. It will function exactly as if it was installed on a hard drive, in that software can be added or removed, customised in any way, and all configuration and data changes will persist across boots. This is accomplished by installing Linux Mint and the GRUB boot loader to the USB stick as if it was a normal hard drive.
 
 ### Why Linux Mint?
 
-Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. It basically just works and stays out of your way.  In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the installation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
+Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. It basically just works and stays out of your way.  In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the creation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
 
 ### On Privacy, Security, And Trust
 
-This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than I ever will.  If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files.  This provides a foundation of privacy on which security can be built, but it is important to remember that security is much more than privacy alone.
+This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than I ever will.  If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files.  This provides a foundation on which further privacy and security can be built, but it is important to remember that security is much more than privacy alone.
 
 Encryption and account security is only as good as the passwords that protect them. Consider using a password manager and never reuse a password. A passphrase is often easier to remember and provides better security than a complicated password. An example might be “Yellow dogs can’t play with wet spiders.” In the rest of this document I will use the term passphrase instead of password as a nudge in that direction.
 
-There's a saying in System Administration, I know I'm paranoid, but am I paranoid enough? Security is not an absolute. Different people or organisations face different security risks and requirements. You are a much better judge of the risks you face than I am. Broadly speaking, the aspects to consider are the applications used, their configuration, and any network usage. These are enormous topics that can not be properly covered here. The general compromise tends to be around usability versus security. For many situations the compromises made in the default Linux Mint install provide what I consider a good balance. At the very least it provide a solid foundation on which to further customise.
+There's a saying in System Administration, I know I'm paranoid, but am I paranoid enough? Security is not an absolute. Different people or organisations face different security risks and requirements. You are a much better judge of the risks you face than I am. Broadly speaking, the aspects to consider are the applications used, their configuration, and any network usage. These are enormous topics that can not be properly covered here. The general compromise tends to be around usability versus security. For many situations the compromises made in the default Linux Mint install provide what I consider a well balanced starting point. It provide a solid foundation on which to further customise.
 
 We don't know each other. If you download and boot from the [disk image](#the-disk-image) linked in this document you are implicitly trusting us not to do something nefarious. Maybe you are willing to take that risk, maybe you aren't. We have provided both the finished disk image _and_ the recipe used to create it in the hope that if you don't trust the disk image you will still find this useful because you can vet and follow the recipe to create your own disk image that you will be able to trust.
 
@@ -40,15 +40,15 @@ When using a USB stick based system you will notice slow write speeds if/when th
 
 ## Two Paths
 
-There are two paths to an encrypted USB stick based system, you can either download the disk image and put it on a USB stick or you can follow the recipe and create your own encrypted USB stick based system from scratch. As mentioned above, one reason you might chose to follow the Recipe path is because you would rather not trust us or the disk image we created. Totally understandable. Another reason to follow the recipe is to understand the process more and/or to customise it to your needs.
+We provide two paths to an encrypted USB stick based system, you can either download the disk image and put it on a USB stick or you can follow the recipe and create your own encrypted USB stick system from scratch. As mentioned above, one reason you might chose to follow the Recipe path is because you would rather not trust us or the disk image we created. Totally understandable. Another reason to follow the recipe is to understand the process more and/or to customise it to your needs.
 
 ### The Disk Image
 
 The disk image and the files used to validate it can be downloaded from Google Drive here:
 
-1. The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
-2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
-3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
+*  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/1793e18WW2609yOq_INA1Bd0K9OyXtkEO/view?usp=sharing)
+*  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1sac3oDU_vMvkOMTa7jECM0f4dTM9r45S/view?usp=sharing)
+*  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
 
 The TL;DR instructions: Download the disk image, validate it, put it on a USB stick that is at least 16GB in size, boot from it, allow the setup script to run, enjoy.
 
@@ -266,7 +266,7 @@ Click on your location on the map to select your timezone, then click the Next b
 
 Select your keyboard layout and variant. Note that if you chose Canadian English earlier the default selection here will not be the expected English (US) so will have to be changed.
 
-<img width="100%" alt="A screenshot showing the user account screen." src="https://github.com/user-attachments/assets/5f1c6b14-80f1-4a39-be1d-d007b3b3cce1" />
+<img width="100%" alt="A screenshot showing the user account screen." src="https://github.com/user-attachments/assets/e7948701-dbab-482f-9b70-85ee09396ab8" />
 
 Enter the user account information on this screen. Note that the checkbox for encrypting the user's home folder is not selected. This is because rather than just encrypting the user's home directory we have encrypted everything.
 
@@ -357,9 +357,9 @@ Eventually the install will pause at a screen like the one shown below. This is 
 
 At this point we will finalise the installation by manually creating the fstab and crypttab files, editing configuration so GRUB can work with LUKS encryption, installing additional software required to use GRUB on a USB stick, and then finally creating a new initial RAM disk and actually installing GRUB.
 
-#### Create /etc/fstab File
+#### Create /target/etc/fstab File
 
-The file /etc/fstab describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab>` or clicking on the terminal icon and enter the following commands:
+The file /etc/fstab (found at /target/etc/fstab during installation) describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab>` or clicking on the terminal icon and enter the following commands:
 
 ```bash
 sudo bash -c “echo ‘PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1’ >> /target/etc/fstab”
@@ -391,9 +391,9 @@ sudo mkdir -p /target/etc/luks
 sudo dd if=/dev/urandom of=/target/etc/luks/boot_os.keyfile bs=1024 count=4
 ```
 
-#### Create the /etc/crypttab File
+#### Create the /target/etc/crypttab File
 
-The file /etc/crypttab is used to decrypt the encrypted partitions and to map them to the correct filesystem in the fstab file created earlier. Use the following commands to create it:
+The file /etc/crypttab (found at /target/etc/crypttab during installation) is used to decrypt the encrypted partitions and to map them to the correct filesystem in the fstab file created earlier. Use the following commands to create it:
 
 ```bash
 sudo bash -c “echo ‘LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
@@ -506,7 +506,7 @@ exit
 
 #### Automate System Set-Up
 
-In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
+In order to simplify the system set-up process for the end user a [setup script](setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
 
 Download the setup script and a second file that will automatically start it using the following commands:
 
@@ -514,7 +514,7 @@ Download the setup script and a second file that will automatically start it usi
 cd ~/Downloads
 ```
 ```bash
-wget https://github.com/shitfuckery/usb_stick/raw/refs/heads/main/setup/setup.sh
+wget https://github.com/shitfuckery/usb_stick/raw/refs/heads/main/setup.sh
 ```
 ```bash
 wget https://github.com/shitfuckery/usb_stick/raw/refs/heads/main/setup/.config/autostart/USB%20System%20Setup.desktop
@@ -585,7 +585,7 @@ sudo cp ~/Downloads/Bitwarden-2025.7.0-amd64.deb /target/home/setup/
 
 As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
 
-In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing a permissions functionality, but with a GNU AGPLv3 license.
+In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, but with a GNU AGPLv3 license.
 
 
 #### Creating the Disk Image
@@ -600,13 +600,13 @@ sudo sgdisk --print /dev/sdTARGET
 
 Based on the information shown above we know that the last partition ends at sector 17408000 and that each sector is 512 bytes in size. We will need an additional 34 sectors at the end of the disk image to accomodate the backup GPT header and partition table. If you changed the size of your root partition your numbers will be different so make sure you substitute them in the dd command below.
 
-Now is also a time to consider where you want to save the resulting disk image file. You can create it on the Linux Mint installer, but will need to save it to somewhere else. This could be to a fileserver, online storage, or similar. You could also plug the USB stick into a different computer and make the disk image there. In the command below you will see that I am piping the output of dd via ssh to another computer called fileserver.
+Now is also a time to consider where you want to save the resulting disk image file. You can create it on the Linux Mint installer, but will need to save it to somewhere else. This could be to a fileserver, online storage, or similar. You could also plug the USB stick into a different computer and make the disk image there. In the command below you will see that we are piping the output of dd via ssh to another computer called fileserver.
 
 ```bash
 sudo dd if=/dev/TARGET bs=512 count=17408034 status=progress | ssh myaccount@fileserver "dd of=usb_drive_disk_image.img"
 ```
 
-We now create copies of the GPT backup header and partition table at the end of the disk image with the following commands. Following my example, where the disk image was saved to the fileserver, the following commands would be either run on the fileserver or the disk image would be moved to another machine to run these commands.
+We now create copies of the GPT backup header and partition table at the end of the disk image with the following commands. Following our example, where the disk image was saved to the fileserver, the following commands would be either run on the fileserver or the disk image would be moved to another machine to run these commands.
 
 ```bash
 sudo sgdisk -e /path/to/usb_drive_disk_image.img
@@ -630,6 +630,8 @@ If everything went well you should have a working USB drive based system at this
 
 
 ### Possible Next Steps
+
+The end result to this point will be very close to a stock Linux Mint installation. We have chosen to stop at this point, but there are further privacy improvements that could be made, such as disabling third-party cookies in the browsers, having bluetooth default to being off, randomising the bluetooth and wifi MAC addresses, adblocking, etc.
 
 If you are deploying multiple desktops across an organisation you may want to pair your desktops with self hosted services and have the desktop preconfigured to make use of those services or to bookmark them.  The types of services you may want to consider could include NextCloud, Whoogle, Vaultwarden, a VPN, MailCow, or others.
 
