@@ -266,7 +266,7 @@ Click on your location on the map to select your timezone, then click the Next b
 
 Select your keyboard layout and variant. Note that if you chose Canadian English earlier the default selection here will not be the expected English (US) so will have to be changed.
 
-<img width="100%" alt="A screenshot showing the user account screen." src="https://github.com/user-attachments/assets/5f1c6b14-80f1-4a39-be1d-d007b3b3cce1" />
+<img width="100%" alt="A screenshot showing the user account screen." src="https://github.com/user-attachments/assets/e7948701-dbab-482f-9b70-85ee09396ab8" />
 
 Enter the user account information on this screen. Note that the checkbox for encrypting the user's home folder is not selected. This is because rather than just encrypting the user's home directory we have encrypted everything.
 
