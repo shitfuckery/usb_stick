@@ -1,14 +1,18 @@
 # The Shitfuckery USB Stick
 
-## A complete Linux Mint system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
+## A complete Linux Linux system on an encrypted USB stick. Your OS, your software, your files, your privacy, any computer.
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 
 ## Background
 
-Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment. One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was before.
+Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment? One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was, completely unchanged.
 
-This document is based on the excellent [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are; Mint is known for its ease of use while Kali is known for its technical sophistication, this recipe has a simplified creation process because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped, this recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user.
+This document stands on the shoulders of [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are:
+
+  *  Mint is known for its ease of use while Kali is known for its technical sophistication
+  *  This recipe is simplified because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped
+  *  This recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user
 
 ### What You Get
 
@@ -16,7 +20,7 @@ The end result will be a fully functional Linux Mint installation that will run 
 
 ### Why Linux Mint?
 
-Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the installation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
+Linux Mint was chosen because it has a polished and accessible interface that non-technical Windows and MacOS users will be able to quickly become familiar with. It basically just works and stays out of your way.  In addition, the Linux Mint Debian Edition installer includes all of the required tools. This simplifies the installation process compared to the Kali recipe. The tools used are industry standard Libre / Open Source tools that have been very well scrutinised and tested.
 
 ### On Privacy, Security, And Trust
 
@@ -42,9 +46,9 @@ There are two paths to an encrypted USB stick based system, you can either downl
 
 The disk image and the files used to validate it can be downloaded from Google Drive here:
 
-1. The Disk Image [usb_drive_disk_image-release-0.9.0.img](https://drive.google.com/file/d/1IcqVFhNwCa6Co5bCC9ergWz3HbWLb9WX/view?usp=sharing)
-2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.0.img.sha256sum](https://drive.google.com/file/d/1wv6HUucXcYjicNXm3N1yvQj2wu9YWpII/view?usp=sharing)
-3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.0.img.sha256sum.sig](https://drive.google.com/file/d/1xcYVQbNeAKmKepDZeLzVdngE3acpfezv/view?usp=sharing)
+1. The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/14YQBSLFRs3ZiVw9idDnin6EmzUmc9Qz5/view?usp=sharing)
+2. An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1NCzfDaFyxXnPX3gCqE98qTKFXGcx59O1/view?usp=sharing)
+3. A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1dZDC4AfDYOf8FpVonR9zMaj2m2LxELBw/view?usp=sharing)
 
 The TL;DR instructions: Download the disk image, validate it, put it on a USB stick that is at least 16GB in size, boot from it, allow the setup script to run, enjoy.
 
@@ -72,9 +76,8 @@ The Linux Mint installer desktop. Note the circled icon for the terminal in the 
 
 #### Determine the Target USB Drive Letter
 
-[!CAUTION]
-
-Do not attach the Target USB stick (the one you want to install onto) until instructed to do so. A possible source of errors is writing to the wrong USB stick or drive, so we always want to make sure we know which one is our Target USB stick. The easiest way to do this is to observe the list of drives before and after the Target USB stick has been plugged in.
+> [!CAUTION]
+> Do not attach the Target USB stick (the one you want to install onto) until instructed to do so. A possible source of errors is writing to the wrong USB stick or drive, so we always want to make sure we know which one is our Target USB stick. The easiest way to do this is to observe the list of drives before and after the Target USB stick has been plugged in.
 
 Open a terminal window. To do this either click on the icon circled in the screenshot above or press the Windows button on your keyboard and type 'terminal' followed by Enter. Either will result in a window like the one shown below opening.
 
@@ -102,9 +105,8 @@ In the example shown above the Target USB stick is the newly listed drive /dev/s
 
 It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from one boot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or open an issue here and we will do our best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
 
-[!IMPORTANT]
-
-**Going forward these instructions will use /dev/sdTARGET in all commands referencing the Target USB stick. Please substitute the drive letter for TARGET (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after TARGET (eg /dev/sdTARGET3) which would be /dev/sdb3 in this example.**
+> [!IMPORTANT]
+> **Going forward these instructions will use /dev/sdTARGET in all commands referencing the Target USB stick. Please substitute the drive letter for TARGET (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after TARGET (eg /dev/sdTARGET3) which would be /dev/sdb3 in this example.**
 
 #### Partition the Target USB Stick
 
@@ -148,9 +150,8 @@ We will be using LUKS version 1 to format the boot partition because GRUB, the b
 
 When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions.
 
-[!NOTE]
-
-Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
+> [!NOTE]
+> Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
 
 ```bash
 sudo cryptsetup luksFormat --type=luks1 /dev/sdTARGET1
@@ -188,7 +189,7 @@ You may notice we have not formatted the /dev/sdTARGET2 partition. It will be us
 
 #### Setup Btrfs Subvolumes
 
-We are using btrfs for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
+We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
 
 ```bash
 sudo mount -o subvol=/ /dev/mapper/LUKS_ROOT /mnt
@@ -273,9 +274,8 @@ For the disk image we used 'setup' for the username, password, and computer name
 
 <img width="100%" alt="A screenshot showing the partitioning screen." src="https://github.com/user-attachments/assets/eb16762c-3f02-4b88-ba96-f34b1a92c5ac" />
 
-[!CAUTION]
-
-The screenshot above shows the partitioning screen. It is **very important that you select the Manual Partitioning option** otherwise the installer will write to the hard drive, overwriting whatever is on it, instead of the Target USB .
+> [!CAUTION]
+> The screenshot above shows the partitioning screen. It is **very important that you select the Manual Partitioning option** otherwise the installer will write to the hard drive, overwriting whatever is on it, instead of the Target USB .
 
 <img width="100%" alt="A screenshot showing the manual partitioning screen." src="https://github.com/user-attachments/assets/256b33b3-2903-47b3-ad83-3c8e9c1c9ff6" />
 
@@ -336,9 +336,8 @@ The items that start with /target in the right-most column are the ones we are i
 
 At this point switch back to the installer window and click on the Next button in the bottom right. This will take you to a screen like the one shown below.
 
-[!CAUTION]
-
- **It is very important that you deselect the checkbox circled in the screenshot below. A mistake here would overwrite the bootloader on the hard drive of the computer you are working on.**
+> [!CAUTION]
+> **It is very important that you deselect the checkbox circled in the screenshot below. A mistake here would overwrite the bootloader on the hard drive of the computer you are working on.**
 
  We will be manually installing the GRUB bootloader in order to pass the --removable option, which is required when installing to a USB stick and not available otherwise.
 
@@ -507,7 +506,7 @@ exit
 
 #### Automate System Set-Up
 
-In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set that up.
+In order to simplify the system set-up process for the end user a [setup script](setup/setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
 
 Download the setup script and a second file that will automatically start it using the following commands:
 
@@ -524,13 +523,28 @@ wget https://github.com/shitfuckery/usb_stick/raw/refs/heads/main/setup/.config/
 Enable the automatic running of the setup.sh script by moving the two downloaded files into the correct locations:
 
 ```bash
-sudo mkdir -p /target/home/setup/.config/autostart/
+sudo mkdir -p /target/home/setup/.config/autostart /target/etc/skel/.config/autostart
 ```
 ```bash
-sudo mv /home/mint/Downloads/setup.sh /target/home/setup/setup.sh
+sudo cp /home/mint/Downloads/setup.sh /target/usr/local/bin/setup.sh
+```
+```bash
+sudo chmod 755 /target/usr/local/bin/setup.sh
+```
+```bash
+sudo cp /home/mint/Downloads/USB\ System\ Setup.desktop /target/etc/skel/.config/autostart/
 ```
 ```bash
 sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.config/autostart/
+```
+
+Allow setup.sh to be run as root with sudo without requiring a password for users in the sudo group. This is done to allow the setup.sh script to be run automatically by both the setup user and also by the user account created during the setup process so that it can clean up after itself by removing the setup user once it is no longer necessary. This file is automatically removed at the end of the setup process by setup.sh.
+
+```bash
+sudo bash -c "echo '%sudo	ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/setup.sh' > /target/etc/sudoers.d/setup"
+```
+```bash
+sudo chmod 440 /target/etc/sudoers.d/setup
 ```
 
 
@@ -538,7 +552,8 @@ sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.conf
 
 You can customise the configuration of future user accounts by adding the custom configuration to the /target/etc/skel directory. Files in this directory will be copied to the home directory of any future users, such as the one the setup.sh script creates.
 
-In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder.
+In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder. You could of course do more useful things, like configure software in a particular way, such as disabling third-party cookies in the browsers, enabling a default VPN, pinning particular applications to the task bar, etc.
+
 
 Download the [gist](https://gist.github.com/beanjammin/1a3978ce41b9a621ef84075047deffb8) with the following command:
 
@@ -551,3 +566,71 @@ Now add the gistfile contents to the end of the /target/etc/skel/.bashrc file wi
 ```bash
 sudo bash -c "cat gistfile1.txt >> /target/etc/skel/.bashrc
 ```
+
+Set the Hostname
+
+```bash
+sudo echo "usbstick-setup" > /target/etc/hostname
+```
+
+Download Bitwarden and make it available.
+
+The last bit of customisation to finish off the recipe is the installation of the Bitwarden Linux client. While it's great that Bitwarden provide the Linux client in a .deb format, unfortunately it is not in a proper repository so it can not be installed with apt-get.  Additionally the download process requires javascript, so we can not easily script it's download, so it has to be done manually.
+
+Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2025.7.0-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
+
+```bash
+sudo cp ~/Downloads/Bitwarden-2025.7.0-amd64.deb /target/home/setup/
+```
+
+As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
+
+In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing a permissions functionality, but with a GNU AGPLv3 license.
+
+
+#### Creating the Disk Image
+
+We will use the program dd to create a disk image file of the USB drive. To do that we need to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
+
+```bash
+sudo sgdisk --print /dev/sdTARGET
+```
+
+<img width="100%" alt="Output of the command `sgdisk --print /dev/sdb`" src="https://github.com/user-attachments/assets/f30a080e-e3e7-47bd-aa9f-4cb6b9464513" />
+
+Based on the information shown above we know that the last partition ends at sector 17408000 and that each sector is 512 bytes in size. We will need an additional 34 sectors at the end of the disk image to accomodate the backup GPT header and partition table. If you changed the size of your root partition your numbers will be different so make sure you substitute them in the dd command below.
+
+Now is also a time to consider where you want to save the resulting disk image file. You can create it on the Linux Mint installer, but will need to save it to somewhere else. This could be to a fileserver, online storage, or similar. You could also plug the USB stick into a different computer and make the disk image there. In the command below you will see that I am piping the output of dd via ssh to another computer called fileserver.
+
+```bash
+sudo dd if=/dev/TARGET bs=512 count=17408034 status=progress | ssh myaccount@fileserver "dd of=usb_drive_disk_image.img"
+```
+
+We now create copies of the GPT backup header and partition table at the end of the disk image with the following commands. Following my example, where the disk image was saved to the fileserver, the following commands would be either run on the fileserver or the disk image would be moved to another machine to run these commands.
+
+```bash
+sudo sgdisk -e /path/to/usb_drive_disk_image.img
+```
+```bash
+sudo sgdisk -k /path/to/usb_drive_disk_image.img
+```
+```bash
+sudo sgdisk --print /path/to/usb_drive_disk_image.img
+```
+
+The last command should output a description of the usb_drive_disk_image.img file and it should not include any error messages.
+
+To further test the usb_drive_disk_image.img file write it to a USB drive with the following command and try booting a computer with it. Be sure to confirm the correct TARGET drive using the same method shown earlier, comparing before and after results of `ls -l /dev/sd*`
+
+```bash
+dd if=/path/to/usb_drive_disk_image.img of=/dev/sdTARGET status=progress
+```
+
+If everything went well you should have a working USB drive based system at this point. Congratulations!
+
+
+### Possible Next Steps
+
+If you are deploying multiple desktops across an organisation you may want to pair your desktops with self hosted services and have the desktop preconfigured to make use of those services or to bookmark them.  The types of services you may want to consider could include NextCloud, Whoogle, Vaultwarden, a VPN, MailCow, or others.
+
+Using free / open source tools it is possible to securely host tools that will be useful to your organisation.  Watch for a follow-up recipe for hosting such services.
