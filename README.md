@@ -23,7 +23,7 @@
       *  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
       *  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
       *  [Create /target/etc/fstab File](#create-targetetcfstab-file)
-      *  [Create an Encryption Key File](#create-en-encryption-key-file)
+      *  [Create an Encryption Key File](#create-an-encryption-key-file)
       *  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
       *  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
       *  [Connect to the Internet](#connect-to-the-internet)
@@ -44,7 +44,7 @@ Sometimes a person realises a need to elevate their privacy requirements. In the
 This document stands on the shoulders of [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are:
 
   *  Mint is known for its ease of use while Kali is known for its technical sophistication
-  *  This recipe is simplified because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped
+  *  This recipe is simplified because the Linux Mint Debian Edition (LMDE) Installer includes all of the tools necessary and legacy BIOS support has been dropped
   *  This recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user
 
 ### What You Get
