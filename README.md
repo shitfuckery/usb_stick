@@ -621,7 +621,7 @@ As the version number is bound to have changed, be sure to update the BITWARDEN 
 In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, but with a GNU AGPLv3 license.
 
 
-#### Creating the Disk Image
+#### Create the Disk Image
 
 We will use the program dd to create a disk image file of the USB drive. To do that we need to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
 
