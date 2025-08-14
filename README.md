@@ -4,6 +4,39 @@
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 
+*  [Background](#background)
+   *  [What You Get](#what-you-get)
+   *  [Why Linux Mint](#why-linux-mint)
+   *  [On Privacy, Security, And Trust](#on-privacy-security-and-trust)
+   *  [On USB Sticks](#on-usb-sticks)
+*  [Two Paths](#two-paths)
+   *  [The Disk Image (Recommended)](#the-disk-image)
+      *  [Disk Image Instructions](README-using_the_disk_image.md)
+   *  [The Recipe (Make your own encrypted USB stick system from scratch)](#the-recipe)
+      *  [Requirements](#requirements)
+      *  [Boot the Linux Mint Debian Edition Installer](#boot-the-linux-mint-debian-edition-installer)
+      *  [Determine the Target USB Drive Letter](#determine-the-target-usb-drive-letter)
+      *  [Partition the Target USB Stick](#partition-the-target-usb-stick)
+      *  [Encrypt the USB Stick Partitions](#encrypt-the-usb-stick-partitions)
+      *  [Open the Encrypted Partitions](#open-the-encrypted-partitions)
+      *  [Format the Partitions](#format-the-partitions)
+      *  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
+      *  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
+      *  [Create /target/etc/fstab File](#create-targetetcfstab-file)
+      *  [Create an Encryption Key File](#create-en-encryption-key-file)
+      *  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
+      *  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
+      *  [Connect to the Internet](#connect-to-the-internet)
+      *  [Create Initial RAM Disk](#create-initial-ram-disk)
+      *  [Install GRUB](#install-grub)
+      *  [Install Any Additional Software](#install-any-additional-software)
+      *  [Exit the chroot](#exit-the-chroot)
+      *  [Automate System Set-Up](#automate-system-set-up)
+      *  [Customise Configuration](#customise-configuration)
+      *  [Create the Disk Image](#create-the-disk-image)
+   *  [Possible Next Steps](#possible-next-steps)
+
+
 ## Background
 
 Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment? One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was, completely unchanged.
@@ -58,7 +91,7 @@ The much more thorough and better explained version of the Disk Image instructio
 
 The recipe describes the steps used to create the disk image that can be downloaded above. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large). By following this recipe you will be able to vet the steps taken and create your own disk image with any customisations you require.
 
-#### Preparation
+#### Requirements 
 
 You will need:
 * A 64bit x86 (Intel or AMD CPU) based computer with two free USB ports
@@ -187,7 +220,7 @@ sudo mkfs.btrfs -L root /dev/mapper/LUKS_ROOT
 
 You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader and does not use a filesystem.
 
-#### Setup Btrfs Subvolumes
+#### Setup BTRFS Subvolumes
 
 We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
 
