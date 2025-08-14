@@ -4,6 +4,39 @@
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 
+*  [Background](#background)
+   *  [What You Get](#what-you-get)
+   *  [Why Linux Mint](#why-linux-mint)
+   *  [On Privacy, Security, And Trust](#on-privacy-security-and-trust)
+   *  [On USB Sticks](#on-usb-sticks)
+*  [Two Paths](#two-paths)
+   *  [The Disk Image (Recommended)](#the-disk-image)
+      *  [Disk Image Instructions](README-using_the_disk_image.md)
+   *  [The Recipe (Make your own encrypted USB stick system from scratch)](#the-recipe)
+      *  [Requirements](#requirements)
+      *  [Boot the Linux Mint Debian Edition Installer](#boot-the-linux-mint-debian-edition-installer)
+      *  [Determine the Target USB Drive Letter](#determine-the-target-usb-drive-letter)
+      *  [Partition the Target USB Stick](#partition-the-target-usb-stick)
+      *  [Encrypt the USB Stick Partitions](#encrypt-the-usb-stick-partitions)
+      *  [Open the Encrypted Partitions](#open-the-encrypted-partitions)
+      *  [Format the Partitions](#format-the-partitions)
+      *  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
+      *  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
+      *  [Create /target/etc/fstab File](#create-targetetcfstab-file)
+      *  [Create an Encryption Key File](#create-an-encryption-key-file)
+      *  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
+      *  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
+      *  [Connect to the Internet](#connect-to-the-internet)
+      *  [Create Initial RAM Disk](#create-initial-ram-disk)
+      *  [Install GRUB](#install-grub)
+      *  [Install Any Additional Software](#install-any-additional-software)
+      *  [Exit the chroot](#exit-the-chroot)
+      *  [Automate System Set-Up](#automate-system-set-up)
+      *  [Customise Configuration](#customise-configuration)
+      *  [Create the Disk Image](#create-the-disk-image)
+   *  [Possible Next Steps](#possible-next-steps)
+
+
 ## Background
 
 Sometimes a person realises a need to elevate their privacy requirements. In the world of computing this can be disruptive to the usual way of doing things. What if you could plug a USB stick into any computer, boot from it, and be in a more private environment? One setup the way you want, with your software, your files, and your configuration. Reboot again without the USB stick and the computer is back exactly as it was, completely unchanged.
@@ -11,7 +44,7 @@ Sometimes a person realises a need to elevate their privacy requirements. In the
 This document stands on the shoulders of [Standalone Kali Linux 2021.4 Installation on a USB Drive, Fully Encrypted Kali Linux](https://www.kali.org/docs/usb/usb-standalone-encrypted/). The key distinctions between the two are:
 
   *  Mint is known for its ease of use while Kali is known for its technical sophistication
-  *  This recipe is simplified because the Linux Mint Debian Installer includes all of the tools necessary and legacy BIOS support has been dropped
+  *  This recipe is simplified because the Linux Mint Debian Edition (LMDE) Installer includes all of the tools necessary and legacy BIOS support has been dropped
   *  This recipe builds a disk image that, while still big at 8.4GB, is intended to be redistributed and includes a setup script that automates the final setup process for the end user
 
 ### What You Get
@@ -58,7 +91,7 @@ The much more thorough and better explained version of the Disk Image instructio
 
 The recipe describes the steps used to create the disk image that can be downloaded above. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large). By following this recipe you will be able to vet the steps taken and create your own disk image with any customisations you require.
 
-#### Preparation
+#### Requirements 
 
 You will need:
 * A 64bit x86 (Intel or AMD CPU) based computer with two free USB ports
@@ -187,7 +220,7 @@ sudo mkfs.btrfs -L root /dev/mapper/LUKS_ROOT
 
 You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader and does not use a filesystem.
 
-#### Setup Btrfs Subvolumes
+#### Setup BTRFS Subvolumes
 
 We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
 
@@ -588,7 +621,7 @@ As the version number is bound to have changed, be sure to update the BITWARDEN 
 In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, but with a GNU AGPLv3 license.
 
 
-#### Creating the Disk Image
+#### Create the Disk Image
 
 We will use the program dd to create a disk image file of the USB drive. To do that we need to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
 

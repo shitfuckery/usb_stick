@@ -2,6 +2,20 @@
 
 These instructions will walk you through the process of using the disk image linked below to create your own encrypted USB stick based Linux Mint system. The instructions vary based on whether you are using a computer running Windows, MacOS, or Linux. The resulting USB stick can be used on any 64 bit x86 based computer (Intel or AMD CPU) including Intel based Apple computers. The resulting USB stick can not be used on computers using Apple's own ARM based CPUs, however the creation of the USB stick itself can be done on ARM based computers.
 
+*  [Requirements](#requirements)
+*  [Validate the Disk Image](#validate-the-disk-image)
+   *  [Check the SHA256sum of the Disk Image](#check-the-sha256sum-of-the-disk-image)
+   *  [Check the GPG Signature of the .sha256sum File](#check-the-gpg-signature-of-the-sha256sum-file)
+      *  [To Validate the Signature on Windows, MacOS, or Linux](#to-validate-the-signature-on-windows-macos-or-linux)
+*  [Write the Disk Image to a USB Stick](#write-the-disk-image-to-a-usb-stick)
+*  [Boot the Computer Using the USB Stick](#boot-the-computer-using-the-usb-stick)
+*  [Log-in as setup with the Password setup](#log-in-as-setup-with-the-password-setup)
+*  [Next Steps](#next-steps)
+   *  [Install Updates](#install-updates)
+   *  [Install Additional Software](#install-additional-software)
+   *  [Explore](#explore)
+
+
 ## Requirements
 
 *  The following 3 files downloaded to your computer:
@@ -21,7 +35,7 @@ Validating the disk image assures you that the file has be downloaded properly, 
 
 At the time of writing the disk image version number is 0.9.1. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your user's Downloads directory. If you have saved the files somewhere else upate the following commands accordingly.
 
-### Check the SHA256sum of the disk image:
+### Check the SHA256sum of the Disk Image:
 
 An SHA256sum is a hash of seemingly random characters calculated based on the contents of a file. Two identical files will result in the same hash being generated while even the most minor change will result in a different hash being generated.  If the two hashes match you can be assured that the disk image you downloaded is the same as the one used to generate the SHA256sum file. If the two hashes are not the same the files do not match and you should not use the disk image.
 
@@ -71,7 +85,7 @@ GPG (Gnu Privacy Guard) is available on Windows, MacOS, and Linux. Once installe
 
 GPG is installed by default on Linux. For Windows and MacOS use the following instructions.
 
-#### To validate the signature on Windows, MacOS, or Linux
+#### To Validate the Signature on Windows, MacOS, or Linux
 
 Use the following commands from the terminal / command prompt to search for our public key and download it to your computer.
 
@@ -99,7 +113,7 @@ The command is likely to output an additional warning that our GPG key is not si
 If the command did not output similar text saying that the signature is good there is a problem with the signature or sha256sum file and you should _NOT_ use the disk image. Please create an issue on github.com or contact us at code@shitfuckery.ca and include "Disk image validation problem" in the email subject and the text that was output by the above command in the body of your email.
 
 
-## Write the Disk Image to a USB stick
+## Write the Disk Image to a USB Stick
 
 After the disk image has been validated it is safe to use.
 
@@ -175,7 +189,7 @@ Enter the default disk encryption passphrase "setup" and press `Enter` to contin
 
 
 
-## Log in as setup with the password setup
+## Log in as setup with the Password setup
 
 Log in as the user setup with the password `setup`.
 
@@ -213,7 +227,7 @@ Like any newly set-up computer there will be a lot of updates to install. Update
 <img width="100%" alt="Screenshot showing the Update Manager" src="https://github.com/user-attachments/assets/d0ef85a9-9c6a-4ffa-a801-61cabfd476ec" />
 
 
-#### Install additional software
+#### Install Additional Software
 
 There is a very wide selection of software for Linux Mint. Install the software you want. Make it your own.
 
