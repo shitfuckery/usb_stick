@@ -201,7 +201,7 @@ Now that the boot and root partitions have been encrypted they need to be decryp
 sudo cryptsetup open /dev/sdTARGET1 LUKS_BOOT
 ```
 ```bash
-sudo cryptsetup open /dev/SDTARGET4 LUKS_ROOT
+sudo cryptsetup open /dev/sdTARGET4 LUKS_ROOT
 ```
 
 With the commands above the names LUKS_BOOT and LUKS_ROOT are applied to the decrypted partitions, they are then made available at /dev/mapper/LUKS_BOOT and /dev/mapper/LUKS_ROOT where they can be treated like a normal partition.
@@ -585,7 +585,7 @@ sudo chmod 440 /target/etc/sudoers.d/setup
 
 You can customise the configuration of future user accounts by adding the custom configuration to the /target/etc/skel directory. Files in this directory will be copied to the home directory of any future users, such as the one the setup.sh script creates.
 
-In our exapmle we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder. You could of course do more useful things, like configure software in a particular way, such as disabling third-party cookies in the browsers, enabling a default VPN, pinning particular applications to the task bar, etc.
+In our example we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder. You could of course do more useful things, like configure software in a particular way, such as disabling third-party cookies in the browsers, enabling a default VPN, pinning particular applications to the task bar, etc.
 
 
 Download the [gist](https://gist.github.com/beanjammin/1a3978ce41b9a621ef84075047deffb8) with the following command:
@@ -603,7 +603,7 @@ sudo bash -c "cat gistfile1.txt >> /target/etc/skel/.bashrc
 Set the Hostname
 
 ```bash
-sudo echo "usbstick-setup" > /target/etc/hostname
+sudo echo "setup" > /target/etc/hostname
 ```
 
 Download Bitwarden and make it available.
@@ -618,7 +618,7 @@ sudo cp ~/Downloads/Bitwarden-2025.7.0-amd64.deb /target/home/setup/
 
 As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
 
-In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/) a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, but with a GNU AGPLv3 license.
+In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/), a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, with a friendly GNU AGPLv3 license.
 
 
 #### Create the Disk Image
