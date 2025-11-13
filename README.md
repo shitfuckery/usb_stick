@@ -139,7 +139,7 @@ In the example shown above the Target USB stick is the newly listed drive /dev/s
 It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from one boot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or open an issue here and we will do our best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
 
 > [!IMPORTANT]
-> **Going forward these instructions will use /dev/sdTARGET in all commands referencing the Target USB stick. Please substitute the drive letter for TARGET (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after TARGET (eg /dev/sdTARGET3) which would be /dev/sdb3 in this example.**
+> **Going forward these instructions will use /dev/sd${\textsf{\color{red}TARGET}}$ in all commands referencing the Target USB stick. Please substitute the drive letter for ${\textsf{\color{red}TARGET}}$ (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after ${\textsf{\color{red}TARGET}}$ (eg /dev/sd${\textsf{\color{red}TARGET}}$3) which would be /dev/sdb3 in this example.**
 
 #### Partition the Target USB Stick
 
@@ -148,31 +148,31 @@ Partitioning a drive is a way to set aside space for particular uses. Modern com
 We start by deleting any existing partitions on the Target USB stick:
 
 ```bash
-sudo sgdisk --zap-all /dev/sdTARGET
+sudo sgdisk --zap-all /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 
 The following commands create the 4 partitions we need:
 
 ```bash
-sudo sgdisk --new=1:0:+512M /dev/sdTARGET
+sudo sgdisk --new=1:0:+512M /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 ```bash
-sudo sgdisk --new=2:0:+2M /dev/sdTARGET
+sudo sgdisk --new=2:0:+2M /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 ```bash
-sudo sgdisk --new=3:0:+128M /dev/sdTARGET
+sudo sgdisk --new=3:0:+128M /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 ```bash
-sudo sgdisk --new=4:0:+16091137 /dev/sdTARGET
+sudo sgdisk --new=4:0:+16091137 /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 
 The following commands set the correct types for the partitions and assign them names. The names themselves aren't important, but may be helpful in the future if trying to sort out which partition is used for what.
 
 ```bash
-sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8300 /dev/sdTARGET
+sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8300 /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 ```bash
-sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP--change-name=4:rootfs /dev/sdTARGET
+sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP--change-name=4:rootfs /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 
 #### Encrypt the USB Stick Partitions
@@ -184,13 +184,13 @@ We will be using LUKS version 1 to format the boot partition because GRUB, the b
 When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions.
 
 > [!NOTE]
-> Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
+> Many of the following commands include a partition number after the ${\textsf{\color{red}TARGET}}$ (eg /dev/sd${\textsf{\color{red}TARGET}}$1), be sure to leave that number in place when changing ${\textsf{\color{red}TARGET}}$ to your drive letter (eg /dev/sdb1).
 
 ```bash
-sudo cryptsetup luksFormat --type=luks1 /dev/sdTARGET1
+sudo cryptsetup luksFormat --type=luks1 /dev/sd${\textsf{\color{red}TARGET}}$1
 ```
 ```bash
-sudo cryptsetup luksFormat /dev/sdTARGET4
+sudo cryptsetup luksFormat /dev/sd${\textsf{\color{red}TARGET}}$4
 ```
 
 #### Open The Encrypted Partitions
@@ -198,10 +198,10 @@ sudo cryptsetup luksFormat /dev/sdTARGET4
 Now that the boot and root partitions have been encrypted they need to be decrypted, or opened, before we can continue. You will be asked for a passphrase, use the same one you used in the previous step.
 
 ```bash
-sudo cryptsetup open /dev/sdTARGET1 LUKS_BOOT
+sudo cryptsetup open /dev/sd${\textsf{\color{red}TARGET}}$1 LUKS_BOOT
 ```
 ```bash
-sudo cryptsetup open /dev/sdTARGET4 LUKS_ROOT
+sudo cryptsetup open /dev/sd${\textsf{\color{red}TARGET}}$4 LUKS_ROOT
 ```
 
 With the commands above the names LUKS_BOOT and LUKS_ROOT are applied to the decrypted partitions, they are then made available at /dev/mapper/LUKS_BOOT and /dev/mapper/LUKS_ROOT where they can be treated like a normal partition.
@@ -212,13 +212,13 @@ With the commands above the names LUKS_BOOT and LUKS_ROOT are applied to the dec
 sudo mkfs.ext4 -L boot /dev/mapper/LUKS_BOOT
 ```
 ```bash
-sudo mkfs.vfat -F 16 -n EFI-SP /dev/sdTARGET3
+sudo mkfs.vfat -F 16 -n EFI-SP /dev/sd${\textsf{\color{red}TARGET}}$3
 ```
 ```bash
 sudo mkfs.btrfs -L root /dev/mapper/LUKS_ROOT
 ```
 
-You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader and does not use a filesystem.
+You may notice we have not formatted the /dev/sd${\textsf{\color{red}TARGET}}$2 partition. It will be used for the bootloader and does not use a filesystem.
 
 #### Setup BTRFS Subvolumes
 
@@ -336,7 +336,7 @@ sudo mount /dev/mapper/LUKS_BOOT /target/boot
 sudo mkdir -p /target/boot/efi
 ```
 ```bash
-sudo mount /dev/sdTARGET3 /target/boot/efi
+sudo mount /dev/sd${\textsf{\color{red}TARGET}}$3 /target/boot/efi
 ```
 ```bash
 sudo mkdir -p /target/home
@@ -365,7 +365,7 @@ df -h
 
 <img width="100%" alt="A screenshot showing the output of the `df -h` command." src="https://github.com/user-attachments/assets/440f2bf0-1384-4451-bf57-539589bf7fc2" />
 
-The items that start with /target in the right-most column are the ones we are interested in. Their order doesn’t matter and the centre columns information will be different, but the left-most and right-most columns should match the screenshot with the exception of /dev/sda3 where the drive letter will match your TARGET drive.
+The items that start with /target in the right-most column are the ones we are interested in. Their order doesn’t matter and the centre columns information will be different, but the left-most and right-most columns should match the screenshot with the exception of /dev/sda3 where the drive letter will match your ${\textsf{\color{red}TARGET}}$ drive.
 
 At this point switch back to the installer window and click on the Next button in the bottom right. This will take you to a screen like the one shown below.
 
@@ -395,7 +395,7 @@ At this point we will finalise the installation by manually creating the fstab a
 The file /etc/fstab (found at /target/etc/fstab during installation) describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab>` or clicking on the terminal icon and enter the following commands:
 
 ```bash
-sudo bash -c “echo ‘PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1’ >> /target/etc/fstab”
+sudo bash -c “echo ‘PARTUUID=$(blkid -s PARTUUID -o value /dev/sd${\textsf{\color{red}TARGET}}$3) /boot/efi vfat umask=0077 0 1’ >> /target/etc/fstab”
 ```
 ```bash
 sudo bash -c “echo ‘/dev/mapper/LUKS_ROOT / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0’ >> /target/etc/fstab
@@ -429,10 +429,10 @@ sudo dd if=/dev/urandom of=/target/etc/luks/boot_os.keyfile bs=1024 count=4
 The file /etc/crypttab (found at /target/etc/crypttab during installation) is used to decrypt the encrypted partitions and to map them to the correct filesystem in the fstab file created earlier. Use the following commands to create it:
 
 ```bash
-sudo bash -c “echo ‘LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
+sudo bash -c “echo ‘LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sd${\textsf{\color{red}TARGET}}$1) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
 ```
 ```bash
-sudo bash -c “echo ‘LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
+sudo bash -c “echo ‘LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sd${\textsf{\color{red}TARGET}}$4) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
 ```
 
 #### Configure LUKS and GRUB to Work Together
@@ -452,10 +452,10 @@ sudo chmod 500 /target/etc/luks
 sudo chmod 400 /target/etc/luks/boot_os.keyfile
 ```
 ```bash
-sudo cryptsetup luksAddKey /dev/sdTARGET1 /target/etc/luks/boot_os.keyfile
+sudo cryptsetup luksAddKey /dev/sd${\textsf{\color{red}TARGET}}$1 /target/etc/luks/boot_os.keyfile
 ```
 ```bash
-sudo cryptsetup luksAddKey /dev/sdTARGET4 /target/etc/luks/boot_os.keyfile
+sudo cryptsetup luksAddKey /dev/sd${\textsf{\color{red}TARGET}}$4 /target/etc/luks/boot_os.keyfile
 ```
 ```bash
 sudo bash -c “echo ‘GRUB_ENABLE_CRYPTODISK=y’ >> /target/etc/default/grub”
@@ -519,7 +519,7 @@ apt-get update && sudo apt-get -y install grub-common grub-efi-amd64 os-prober
 Run the following commands to install GRUB
 
 ```bash
-grub-install --removable /dev/sdTARGET
+grub-install --removable /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 ```bash
 update-grub
@@ -626,7 +626,7 @@ In a future write up we plan to discuss pairing the Bitwarden client with [Vault
 We will use the program dd to create a disk image file of the USB drive. To do that we need to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
 
 ```bash
-sudo sgdisk --print /dev/sdTARGET
+sudo sgdisk --print /dev/sd${\textsf{\color{red}TARGET}}$
 ```
 
 <img width="100%" alt="Output of the command `sgdisk --print /dev/sdb`" src="https://github.com/user-attachments/assets/f30a080e-e3e7-47bd-aa9f-4cb6b9464513" />
@@ -636,7 +636,7 @@ Based on the information shown above we know that the last partition ends at sec
 Now is also a time to consider where you want to save the resulting disk image file. You can create it on the Linux Mint installer, but will need to save it to somewhere else. This could be to a fileserver, online storage, or similar. You could also plug the USB stick into a different computer and make the disk image there. In the command below you will see that we are piping the output of dd via ssh to another computer called fileserver.
 
 ```bash
-sudo dd if=/dev/TARGET bs=512 count=17408034 status=progress | ssh myaccount@fileserver "dd of=usb_drive_disk_image.img"
+sudo dd if=/dev/${\textsf{\color{red}TARGET}}$ bs=512 count=17408034 status=progress | ssh myaccount@fileserver "dd of=usb_drive_disk_image.img"
 ```
 
 We now create copies of the GPT backup header and partition table at the end of the disk image with the following commands. Following our example, where the disk image was saved to the fileserver, the following commands would be either run on the fileserver or the disk image would be moved to another machine to run these commands.
@@ -653,10 +653,10 @@ sudo sgdisk --print /path/to/usb_drive_disk_image.img
 
 The last command should output a description of the usb_drive_disk_image.img file and it should not include any error messages.
 
-To further test the usb_drive_disk_image.img file write it to a USB drive with the following command and try booting a computer with it. Be sure to confirm the correct TARGET drive using the same method shown earlier, comparing before and after results of `ls -l /dev/sd*`
+To further test the usb_drive_disk_image.img file write it to a USB drive with the following command and try booting a computer with it. Be sure to confirm the correct ${\textsf{\color{red}TARGET}}$ drive using the same method shown earlier, comparing before and after results of `ls -l /dev/sd*`
 
 ```bash
-dd if=/path/to/usb_drive_disk_image.img of=/dev/sdTARGET status=progress
+dd if=/path/to/usb_drive_disk_image.img of=/dev/sd${\textsf{\color{red}TARGET}}$ status=progress
 ```
 
 If everything went well you should have a working USB drive based system at this point. Congratulations!
