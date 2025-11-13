@@ -395,22 +395,22 @@ At this point we will finalise the installation by manually creating the fstab a
 The file /etc/fstab (found at /target/etc/fstab during installation) describes the fileystem table, the various filesystems that the operating system will use. Normally this is created automatically during the installation process, but because we are installing to an encrypted USB stick we need to create it ourselves. Switch back to the terminal by pressing `<alt><tab>` or clicking on the terminal icon and enter the following commands:
 
 ```bash
-sudo bash -c “echo ‘PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1’ >> /target/etc/fstab”
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c “echo ‘/dev/mapper/LUKS_ROOT / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0’ >> /target/etc/fstab
+sudo bash -c 'echo "/dev/mapper/LUKS_ROOT / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c “echo ‘/dev/mapper/LUKS_BOOT /boot ext4 defaults,noatime 0 1’ >> /target/etc/fstab”
+sudo bash -c 'echo "/dev/mapper/LUKS_BOOT /boot ext4 defaults,noatime 0 1" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c “echo ‘/dev/mapper/LUKS_ROOT /home btrfs defaults,noatime,ssd,compress=lzo,subvol=@home 0 2’ >> /target/etc/fstab”
+sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /home btrfs defaults,noatime,ssd,compress=lzo,subvol=@home 0 2" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c “echo ‘/dev/mapper/LUKS_ROOT /root btrfs defaults,noatime,ssd,compress=lzo,subvol=@root 0 3’ >> /target/etc/fstab”
+sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /root btrfs defaults,noatime,ssd,compress=lzo,subvol=@root 0 3" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c “echo ‘/dev/mapper/LUKS_ROOT /snapshots btrfs defaults,noatime,ssd,compress=lzo,subvol=@snapshots 0 4’ >> /target/etc/fstab”
+sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /snapshots btrfs defaults,noatime,ssd,compress=lzo,subvol=@snapshots 0 4" >> /target/etc/fstab'
 ```
 
 #### Create an Encryption Key File
@@ -429,10 +429,10 @@ sudo dd if=/dev/urandom of=/target/etc/luks/boot_os.keyfile bs=1024 count=4
 The file /etc/crypttab (found at /target/etc/crypttab during installation) is used to decrypt the encrypted partitions and to map them to the correct filesystem in the fstab file created earlier. Use the following commands to create it:
 
 ```bash
-sudo bash -c “echo ‘LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
+sudo bash -c 'echo "LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc/luks/boot_os.keyfile luks,discard" >> /target/etc/crypttab'
 ```
 ```bash
-sudo bash -c “echo ‘LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) /etc/luks/boot_os.keyfile luks,discard’ >> /target/etc/crypttab”
+sudo bash -c 'echo "LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) /etc/luks/boot_os.keyfile luks,discard" >> /target/etc/crypttab'
 ```
 
 #### Configure LUKS and GRUB to Work Together
@@ -440,10 +440,10 @@ sudo bash -c “echo ‘LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) 
 Configure LUKS and Grub to be able to decrypt the filesystem. When you run the two cryptsetup commands you will be asked to enter the passphrase that was used to encrypt the partitions earlier.
 
 ```bash
-sudo bash -c “echo ‘KEYFILE_PATTERN=/etc/luks/*.keyfile’ >> /target/etc/cryptsetup-initramfs/conf-hook”
+sudo bash -c 'echo "KEYFILE_PATTERN=/etc/luks/*.keyfile" >> /target/etc/cryptsetup-initramfs/conf-hook'
 ```
 ```bash
-sudo bash -c “echo ‘UMASK=0077’ >> /target/etc/initramfs-tools/initramfs.conf”
+sudo bash -c 'echo "UMASK=0077" >> /target/etc/initramfs-tools/initramfs.conf'
 ```
 ```bash
 sudo chmod 500 /target/etc/luks
@@ -458,7 +458,7 @@ sudo cryptsetup luksAddKey /dev/sdTARGET1 /target/etc/luks/boot_os.keyfile
 sudo cryptsetup luksAddKey /dev/sdTARGET4 /target/etc/luks/boot_os.keyfile
 ```
 ```bash
-sudo bash -c “echo ‘GRUB_ENABLE_CRYPTODISK=y’ >> /target/etc/default/grub”
+sudo bash -c 'echo "GRUB_ENABLE_CRYPTODISK=y" >> /target/etc/default/grub'
 ```
 
 #### Connect to the Internet
@@ -574,7 +574,7 @@ sudo mv /home/mint/Downloads/USB\ System\ Setup.desktop /target/home/setup/.conf
 Allow setup.sh to be run as root with sudo without requiring a password for users in the sudo group. This is done to allow the setup.sh script to be run automatically by both the setup user and also by the user account created during the setup process so that it can clean up after itself by removing the setup user once it is no longer necessary. This file is automatically removed at the end of the setup process by setup.sh.
 
 ```bash
-sudo bash -c "echo '%sudo	ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/setup.sh' > /target/etc/sudoers.d/setup"
+sudo bash -c 'echo "%sudo	ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/setup.sh" > /target/etc/sudoers.d/setup'
 ```
 ```bash
 sudo chmod 440 /target/etc/sudoers.d/setup
@@ -597,7 +597,7 @@ wget https://gist.github.com/beanjammin/1a3978ce41b9a621ef84075047deffb8/raw/ddb
 Now add the gistfile contents to the end of the /target/etc/skel/.bashrc file with the following command:
 
 ```bash
-sudo bash -c "cat gistfile1.txt >> /target/etc/skel/.bashrc
+sudo bash -c 'cat gistfile1.txt >> /target/etc/skel/.bashrc'
 ```
 
 Set the Hostname
