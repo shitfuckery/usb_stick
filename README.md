@@ -139,7 +139,7 @@ In the example shown above the Target USB stick is the newly listed drive /dev/s
 It is very important to go through the process of finding the correct Target USB stick and to repeat this step if you reboot your computer as drive letters can change from one boot to the next. If you are unsure which drive is your Target USB stick or these directions do not make sense please stop now and ask someone you know for help or open an issue here and we will do our best to help as time allows. There is a real risk of deleting or overwriting the wrong drive if you make a mistake here.
 
 > [!IMPORTANT]
-> **Going forward these instructions will use /dev/sd ${\textsf{\color{red}TARGET}}$ in all commands referencing the Target USB stick. Please substitute the drive letter for ${\textsf{\color{red}TARGET}}$ (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after ${\textsf{\color{red}TARGET}}$ (eg /dev/sd${\textsf{\color{red}TARGET}}$3) which would be /dev/sdb3 in this example.**
+> **Going forward these instructions will use /dev/sd${\textsf{\color{red}TARGET}}$ in all commands referencing the Target USB stick. Please substitute the drive letter for ${\textsf{\color{red}TARGET}}$ (eg b in this /dev/sdb example) found in the previous step. Sometimes the instructions will include a partition number after ${\textsf{\color{red}TARGET}}$ (eg /dev/sd${\textsf{\color{red}TARGET}}$3) which would be /dev/sdb3 in this example.**
 
 #### Partition the Target USB Stick
 
