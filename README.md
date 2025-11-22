@@ -21,7 +21,7 @@ Download the latest disk image and validate it with the sha256sum and signature 
 
    *  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/1793e18WW2609yOq_INA1Bd0K9OyXtkEO/view?usp=sharing)
    *  A sha256sum hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1sac3oDU_vMvkOMTa7jECM0f4dTM9r45S/view?usp=sharing)
-   *  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
 
 Use Rufus (Windows) or dd (MacOS and Linux) to write the disk image to a USB stick that is at least 16GB in size (larger is better). Do not just copy the disk image file to the USB stick. (If that last bit doesn't make sense please use the longer instructions.)
 
@@ -39,19 +39,19 @@ The end result will be a fully functional Linux Mint installation that will run 
 
 Linux Mint was chosen because it has a polished and accessible interface and is known for its user friendliness. If you are coming from Windows or MacOS you will most likely be able to quickly become familiar with Linux Mint. It basically "just works" and stays out of your way.
 
-We are using the Linux Mint Debian Edition (LMDE) variation which, as the name suggests, builds on the Debian Linux distribution. Ubuntu, another popular Linux distribution also builds on Debian so you will usually be able to use software packaged for either of those systems without any changes. Linux Mint uses the apt package manager which makes installing and updating all of the software on your system easy. You could reasonable consider apt the original App Store, but since it's all Free/Libre Open Source Software it's not called a store, it's just how you manage your software.
+We are using the Linux Mint Debian Edition (LMDE) variation which, as the name suggests, builds on the Debian Linux distribution. Ubuntu, another popular Linux distribution also builds on Debian so you will usually be able to use software packaged for either of those systems without any changes. Linux Mint uses the apt package manager which makes installing and updating all of the software on your system easy. You could reasonably consider apt the original App Store, but since it's all Free/Libre Open Source Software it's not called a store, it's just how you manage your software.
 
 The tools used are industry standard Libre / Open Source tools that have been well vetted and tested.
 
 ### On Privacy, Security, And Trust
 
-This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than I ever will.  If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files.  This provides a foundation on which further privacy and security can be built, but it is important to remember that security is much more than privacy alone.
+This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than we ever will.  If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files.  This provides a foundation on which further privacy and security can be built, but it is important to remember that security is much more than privacy alone.
 
-Encryption and account security is only as good as the passwords that protect them. Consider using a password manager and never reuse a password. A passphrase is often easier to remember and provides better security than a complicated password. An example might be “Yellow dogs can’t play with wet spiders” (please don't use this example). In the rest of this document I will use the term passphrase instead of password as a nudge in that direction.
+Encryption and account security is only as good as the passwords that protect them. Consider using a password manager (like the included Bitwarden) and never reuse a password. A passphrase is often easier to remember and provides better security than a complicated password. An example might be “Yellow dogs can’t play with wet spiders” (please don't use this example). In the rest of this document I will use the term passphrase instead of password as a nudge in that direction.
 
 There's a saying in System Administration, I know I'm paranoid, but am I paranoid enough? Security is not an absolute. Different people or organisations face different security risks and requirements. You are a much better judge of the risks you face than I am. Broadly speaking, the aspects to consider are the applications used, their configuration, and your network usage. These are enormous topics that can not be properly covered here. The general compromise tends to be around usability versus security. For many situations the compromises made in the default Linux Mint install provide what I consider a well balanced starting point. It provides a solid foundation on which to build.
 
-Trust is a hard one. We don't know each other. If you download and boot from the [disk image](#the-disk-image) linked in this document you are implicitly trusting us not to do something nefarious. Maybe you are willing to take that risk, maybe you aren't. We have provided both the finished disk image _and_ the recipe used to create it in the hope that if you don't trust the disk image you will still find this useful because you can vet and follow the recipe to create your own disk image that you will be able to trust.
+Trust is a hard one. We don't know each other. If you download and boot from the disk image we created you are implicitly trusting us not to do something nefarious. Maybe you are willing to take that risk, maybe you aren't. We have provided both the finished disk image _and_ the recipe used to create it in the hope that if you don't trust the disk image you will still find this useful because you can vet and follow the recipe to create your own disk image that you will be able to trust. We raise this issue because we think it is important for you to be aware of the issues around trust in software and computing in general.
 
 ### On USB Sticks
 
@@ -71,20 +71,12 @@ You can find the [recipe instructions here](RECIPE.md).
 
 ### The Disk Image (Recommended for most people)
 
-The disk image and the files used to validate it can be downloaded from Google Drive here:
-
-*  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/1793e18WW2609yOq_INA1Bd0K9OyXtkEO/view?usp=sharing)
-*  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1sac3oDU_vMvkOMTa7jECM0f4dTM9r45S/view?usp=sharing)
-*  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
-
-
-
 #### Requirements
 
 *  The following 3 files downloaded to your computer:
    *  The Disk Image [usb_drive_disk_image-release-0.9.1.img](https://drive.google.com/file/d/1793e18WW2609yOq_INA1Bd0K9OyXtkEO/view?usp=sharing)
    *  An SHA256 hash of the disk image [usb_drive_disk_image-release-0.9.1.img.sha256sum](https://drive.google.com/file/d/1sac3oDU_vMvkOMTa7jECM0f4dTM9r45S/view?usp=sharing)
-   *  A GPG signature of the sha256sum file using code@shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-0.9.1.img.sha256sum.sig](https://drive.google.com/file/d/1MpKDAR0Evdus2Y9C-T9EuLEbafh7wb2E/view?usp=sharing)
 *  A USB stick that is at least 16GB in size. A larger USB stick will provide more room for your own software and files. We typically use 128GB sticks, but the size you need will depend on the size of files you intend to use and how much additional software you intend to install.
 *  Windows users will need the program [Rufus](https://rufus.ie/en/) to write the disk image onto a USB stick.
 *  Gnu Privacy Guard (GPG) for confirming the integrity of the disk image.
@@ -94,7 +86,7 @@ The disk image and the files used to validate it can be downloaded from Google D
 
 #### Validate the Disk Image
 
-Strictly speaking this step isn't necessary, however it is a Very Good Idea(tm). Validating the disk image assures you that the file has be downloaded properly, that it has not been altered in any way since being posted, and that it was posted by us.
+Strictly speaking this step isn't necessary, however it is a Very Good Idea(tm). Validating the disk image assures you that the file has been downloaded properly, that it has not been altered in any way since being posted, and that it was posted by us.
 
 At the time of writing the disk image version number is 0.9.1. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your Downloads directory. If you have saved the files somewhere else adjust the following commands accordingly.
 
@@ -144,7 +136,7 @@ cat ~/Downloads/usb_drive_disk_image-release-0.9.1.img.sha256sum
 
 ##### Check the GPG Signature of the .sha256sum File 
 
-GPG (Gnu Privacy Guard) is available on Windows, MacOS, and Linux. Once installed the commands to use it are the same on each platform. GPG uses public key encryption which, among other things, allows you to confirm that a file has been signed by a specific secret key. In our case the .sha256sum file should be digitally signed by the key belonging to code@shitfuckery.ca. The signature is stored in the file ending with .sig. Confirming this will ensure that the files were posted by us because it is cryptographically impossible to change the disk image and create a matching .sha256sum file breaking our signature.
+GPG (Gnu Privacy Guard) is available on Windows, MacOS, and Linux. Once installed the commands to use it are the same on each platform. GPG uses public key encryption which, among other things, allows you to confirm that a file has been signed by a specific secret key. In our case the .sha256sum file should be digitally signed by the key belonging to code(at)shitfuckery.ca. The signature is stored in the file ending with .sig. Confirming this will ensure that the files were posted by us because it is cryptographically impossible to change the disk image and create a matching .sha256sum file breaking our signature.
 
 GPG is installed by default on Linux. For Windows and MacOS use the following instructions.
 
@@ -173,7 +165,7 @@ gpg: Good signature from "Shitfuckery Code Signing <code@shitfuckery.ca>"
 
 The command is likely to output an additional warning that our GPG key is not signed by a key you trust, this is expected and does not effect the confirmation that our GPG key was used to sign the sha256sum file. As an aside, if you are interested to learn more about how the "web of trust works" this is a good resource [https://en.wikipedia.org/wiki/Web_of_trust](https://en.wikipedia.org/wiki/Web_of_trust).
 
-If the command did not output similar text saying that the signature is good there is a problem with the signature or sha256sum file and you should _NOT_ use the disk image. Please create an issue on github.com or contact us at code@shitfuckery.ca and include "Disk image validation problem" in the email subject and include the text that was output by the above command in the body of your email and attach your .sha256sum and .sig files.
+If the command did not output similar text saying that the signature is good there is a problem with the signature or sha256sum file and you should _NOT_ use the disk image. Please create an issue on github.com or contact us at code(at)shitfuckery.ca and include "Disk image validation problem" in the email subject and include the text that was output by the above command in the body of your email and attach your .sha256sum and .sig files.
 
 
 #### Write the Disk Image to a USB Stick
