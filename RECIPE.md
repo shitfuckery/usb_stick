@@ -4,28 +4,28 @@
 
 <!-- Future home of an image to represent the Shitfuckery USB Stick -->
 
-*  [The Recipe (Make your own encrypted USB stick system from scratch)](#the-recipe)
-   *  [Requirements](#requirements)
-   *  [Boot the Linux Mint Debian Edition Installer](#boot-the-linux-mint-debian-edition-installer)
-   *  [Determine the Target USB Drive Letter](#determine-the-target-usb-drive-letter)
-   *  [Partition the Target USB Stick](#partition-the-target-usb-stick)
-   *  [Encrypt the USB Stick Partitions](#encrypt-the-usb-stick-partitions)
-   *  [Open the Encrypted Partitions](#open-the-encrypted-partitions)
-   *  [Format the Partitions](#format-the-partitions)
-   *  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
-   *  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
-   *  [Create /target/etc/fstab File](#create-targetetcfstab-file)
-   *  [Create an Encryption Key File](#create-an-encryption-key-file)
-   *  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
-   *  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
-   *  [Connect to the Internet](#connect-to-the-internet)
-   *  [Create Initial RAM Disk](#create-initial-ram-disk)
-   *  [Install GRUB](#install-grub)
-   *  [Install Any Additional Software](#install-any-additional-software)
-   *  [Exit the chroot](#exit-the-chroot)
-   *  [Automate System Set-Up](#automate-system-set-up)
-   *  [Customise Configuration](#customise-configuration)
-   *  [Create the Disk Image](#create-the-disk-image)
+*  [The Recipe - DIY Your Own Encrypted USB Stick System](#the-recipe)
+*  [Requirements](#requirements)
+*  [Boot the Linux Mint Debian Edition Installer](#boot-the-linux-mint-debian-edition-installer)
+*  [Determine the Target USB Drive Letter](#determine-the-target-usb-drive-letter)
+*  [Partition the Target USB Stick](#partition-the-target-usb-stick)
+*  [Encrypt the USB Stick Partitions](#encrypt-the-usb-stick-partitions)
+*  [Open the Encrypted Partitions](#open-the-encrypted-partitions)
+*  [Format the Partitions](#format-the-partitions)
+*  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
+*  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
+*  [Create /target/etc/fstab File](#create-targetetcfstab-file)
+*  [Create an Encryption Key File](#create-an-encryption-key-file)
+*  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
+*  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
+*  [Connect to the Internet](#connect-to-the-internet)
+*  [Create Initial RAM Disk](#create-initial-ram-disk)
+*  [Install GRUB](#install-grub)
+*  [Install Any Additional Software](#install-any-additional-software)
+*  [Exit the chroot](#exit-the-chroot)
+*  [Automate System Set-Up](#automate-system-set-up)
+*  [Customise Configuration](#customise-configuration)
+*  [Create the Disk Image](#create-the-disk-image)
 *  [Possible Next Steps](#possible-next-steps)
 
 
@@ -39,7 +39,7 @@ This recipe describes the steps used to create a complete Linux Mint system on a
 You will need:
 * A 64bit x86 (Intel or AMD CPU) based computer with two free USB ports
 * A USB stick with the [Linux Mint Debian Edition (LMDE)](https://linuxmint.com/download_lmde.php) installer loaded on it. Use the Linux Mint [Create bootable media](https://linuxmint-installation-guide.readthedocs.io/en/latest/) documentation for information on how to do this.
-* A blank USB stick that is at least 9GB in size. Note that this is the absolute minimum size and is only large enough for creating the disk image. For actual use 16GB should be considered the absolute minimum and larger than that would definitely be better.
+* A blank USB stick that is at least 9GB in size. Note that this is the absolute minimum size and is only large enough for creating the disk image. For actual use 16GB should be considered the absolute bare minimum and larger is definitely be better.
 * A working Internet connection will be necessary to install some of the necessary software.
 * A place to save the resulting disk image. This could be a third USB stick, a remote computer, the local hard drive, or somewhere else. 
 
@@ -107,7 +107,7 @@ sudo sgdisk --new=2:0:+2M /dev/sdTARGET
 sudo sgdisk --new=3:0:+128M /dev/sdTARGET
 ```
 ```bash
-sudo sgdisk --new=4:0:+16091137 /dev/sdTARGET
+sudo sgdisk --new=4:0:+8G /dev/sdTARGET
 ```
 
 The following commands set the correct types for the partitions and assign them names. The names themselves aren't important, but may be helpful in the future if trying to sort out which partition is used for what.
@@ -116,7 +116,7 @@ The following commands set the correct types for the partitions and assign them 
 sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8300 /dev/sdTARGET
 ```
 ```bash
-sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP--change-name=4:rootfs /dev/sdTARGET
+sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP --change-name=4:rootfs /dev/sdTARGET
 ```
 
 ### Encrypt the USB Stick Partitions
@@ -210,6 +210,8 @@ sudo umount /mnt
 
 Linux Mint has a graphical install program that makes installation very easy. It does not directly support installing to an encrypted USB stick, however by using its expert mode in conjunction with some terminal commands we can get around this.
 
+FIX THIS
+
 We will want a second terminal instance available so that we can run the live-installer-expert-mode command in one and additional commands in another. To open a second terminal instance as a tab within the existing terminal window make sure the terminal window is selected and press `<ctrl><shift>t`. You can then switch between tabs by clicking on them with your mouse.
 
 In the new instance type the following command to start the live installer in expert mode:
@@ -219,6 +221,8 @@ sudo live-installer-expert-mode
 ```
 
 This will open a new window like the one shown in the screenshot below.
+
+FIX THIS
 
 <img width="100%" alt="A screenshot showing the opening screen of the LMDE installer." src="https://github.com/user-attachments/assets/21eba1d5-1b7f-4dd5-86c6-b9635afb82c6" />
 
@@ -415,6 +419,16 @@ After connecting to the Internet return to the terminal and continue the followi
 
 ### Create Initial RAM Disk
 
+In order to avoid a possible error (sudo unable to allocate pty: no such device) we need to unmount the filesystems from the USB stick, remove the USB stick from the computer, re-insert the USB stick, and remount its filesystems.  Use these commands to do that:
+
+```bash
+sudo umount -A /dev/sdTARGET
+```
+
+Now remove the USB stick from your computer.
+
+FIX / EXPAND THIS - TRY A FEW THINGS related to /dev/pts not being available, try mount none -t devpts /dev/pts outside chroot before doing this and/or mount --rbind /dev/ target/dev rather than mounting dev and /dev/pts seperately. Could also try it with /sys.
+
 To create the initial RAM disk (initrd) run the following commands:
 
 ```bash
@@ -452,7 +466,7 @@ If there are any error messages after running the `mount -a` command it indicate
 Run the following commands to install the necessary grub related tools and create the initial RAM disk.
 
 ```bash
-apt-get update && sudo apt-get -y install grub-common grub-efi-amd64 os-prober
+apt-get update && sudo apt-get -y install grub-common grub-efi-amd64 os-prober systemd-cryptsetup
 ```
 ```bash
 /usr/sbin/update-initramfs -u -k all
@@ -524,6 +538,11 @@ sudo bash -c 'echo "%sudo	ALL=(ALL:ALL) NOPASSWD:/usr/local/bin/setup.sh" > /tar
 sudo chmod 440 /target/etc/sudoers.d/setup
 ```
 
+### Set the Hostname
+
+```bash
+sudo bash -c 'echo "setup" > /target/etc/hostname'
+```
 
 ### Customise Configuration
 
@@ -544,11 +563,6 @@ Now add the gistfile contents to the end of the /target/etc/skel/.bashrc file wi
 sudo bash -c 'cat gistfile1.txt >> /target/etc/skel/.bashrc'
 ```
 
-Set the Hostname
-
-```bash
-sudo echo "setup" > /target/etc/hostname
-```
 
 Download Bitwarden and make it available.
 
@@ -557,7 +571,7 @@ The last bit of customisation to finish off the recipe is the installation of th
 Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2025.7.0-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
 
 ```bash
-sudo cp ~/Downloads/Bitwarden-2025.7.0-amd64.deb /target/home/setup/
+sudo cp ~/Downloads/Bitwarden-2025.11.1-amd64.deb /target/home/setup/
 ```
 
 As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.

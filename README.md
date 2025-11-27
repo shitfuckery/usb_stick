@@ -13,7 +13,8 @@
 *  [Two Paths](#two-paths)
    *  [The Disk Image (Recommended for most people)](#the-disk-image)
       *  [Disk Image Instructions](README-using_the_disk_image.md)
-   *  [Possible Next Steps](#possible-next-steps)
+   *  [The Recipe - DIY and Understand the Process](RECIPE.md)
+*  [Possible Next Steps](#possible-next-steps)
 
 ## Quick Start
 
