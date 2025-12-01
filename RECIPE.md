@@ -47,6 +47,7 @@ You will need:
 
 The first step is to boot your computer with the Linux Mint Debian Installer USB stick. Every computer has a special keyboard key that can to be pressed shortly after turning it on that will allow it to boot from USB. The Linux Mint installation instructions have a [good write-up](https://linuxmint-installation-guide.readthedocs.io/en/latest/boot.html) on how to determine which key to press for your computer. On a Dell, for instance, pressing F12 after powering it on brings up the Boot Options menu. ESC, F8, and F9 are other common options. Check your computer manual for a definitive answer.
 
+FIX THIS - broken image
 <img alt="A screenshot of the Linux Mint desktop as seen after first booting. The icon for launching the terminal is circled in red." src="https://github.com/user-attachments/assets/0cfc5f2d-dd7d-40e3-be80-9c1cdabc1e1f " width="100%">
 
 The Linux Mint installer desktop. Note the circled icon for the terminal in the bottom left, click on this to open the terminal. This is where we will be working and the commands given below are to be entered into the terminal.
@@ -162,7 +163,7 @@ sudo mkfs.vfat -F 16 -n EFI-SP /dev/sdTARGET3
 sudo mkfs.btrfs -L root /dev/mapper/LUKS_ROOT
 ```
 
-You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader and does not use a filesystem.
+You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader (GRUB) and does not use a filesystem.
 
 ### Setup BTRFS Subvolumes
 
@@ -210,11 +211,7 @@ sudo umount /mnt
 
 Linux Mint has a graphical install program that makes installation very easy. It does not directly support installing to an encrypted USB stick, however by using its expert mode in conjunction with some terminal commands we can get around this.
 
-FIX THIS
-
-We will want a second terminal instance available so that we can run the live-installer-expert-mode command in one and additional commands in another. To open a second terminal instance as a tab within the existing terminal window make sure the terminal window is selected and press `<ctrl><shift>t`. You can then switch between tabs by clicking on them with your mouse.
-
-In the new instance type the following command to start the live installer in expert mode:
+To start the live installer in expert mode enter the following command into the terminal:
 
 ```bash
 sudo live-installer-expert-mode
@@ -222,11 +219,9 @@ sudo live-installer-expert-mode
 
 This will open a new window like the one shown in the screenshot below.
 
-FIX THIS
+FIX THIS - new screenshot
 
 <img width="100%" alt="A screenshot showing the opening screen of the LMDE installer." src="https://github.com/user-attachments/assets/21eba1d5-1b7f-4dd5-86c6-b9635afb82c6" />
-
-Note the expert mode circled at the top.
 
 Click on the "Lets go!" button to continue. This will open a screen like the one shown below.
 
@@ -235,7 +230,7 @@ Click on the "Lets go!" button to continue. This will open a screen like the one
 
 Select your preferred primary language and location from the list. Additional languages can be added after the installation.
 
-If this window is too tall for you to see the Quit / Next buttons at the bottom you can move the window around by holding down the `<alt>` key while clicking and holding anywhere on the window and dragging it around.
+If this window is too tall for you to see the Quit / Next buttons at the bottom you can move the window around by holding down the `<alt>` key while clicking anywhere on the window and dragging it around.
 
 Click the Next button to continue.
 
@@ -251,7 +246,7 @@ Select your keyboard layout and variant. Note that if you chose Canadian English
 
 Enter the user account information on this screen. Note that the checkbox for encrypting the user's home folder is not selected. This is because rather than just encrypting the user's home directory we have encrypted everything.
 
-For the disk image we used 'setup' for the username, password, and computer name. These are all then changed using the [setup script](#automate-system-set-up) that is automatically run when a user logs in.
+For the disk image we used 'setup' for the username, password, and computer name. These are all then changed using the [setup script](#automate-system-set-up) that is automatically run when a user logs in. We recommend doinig the same if you intend to use the setup.sh script to do the final setup. If you use a different username and/or password while making your disk image you will need to update the setup.sh script to match.
 
 <img width="100%" alt="A screenshot showing the partitioning screen." src="https://github.com/user-attachments/assets/eb16762c-3f02-4b88-ba96-f34b1a92c5ac" />
 
@@ -382,6 +377,12 @@ sudo bash -c 'echo "LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc
 ```bash
 sudo bash -c 'echo "LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) /etc/luks/boot_os.keyfile luks,discard" >> /target/etc/crypttab'
 ```
+```bash
+sudo chmod 500 /target/etc/luks
+```
+```bash
+sudo chmod 400 /target/etc/luks/boot_os.keyfile
+```
 
 ### Configure LUKS and GRUB to Work Together
 
@@ -392,12 +393,6 @@ sudo bash -c 'echo "KEYFILE_PATTERN=/etc/luks/*.keyfile" >> /target/etc/cryptset
 ```
 ```bash
 sudo bash -c 'echo "UMASK=0077" >> /target/etc/initramfs-tools/initramfs.conf'
-```
-```bash
-sudo chmod 500 /target/etc/luks
-```
-```bash
-sudo chmod 400 /target/etc/luks/boot_os.keyfile
 ```
 ```bash
 sudo cryptsetup luksAddKey /dev/sdTARGET1 /target/etc/luks/boot_os.keyfile

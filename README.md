@@ -13,7 +13,7 @@
 *  [Two Paths](#two-paths)
    *  [The Disk Image (Recommended for most people)](#the-disk-image)
       *  [Disk Image Instructions](README-using_the_disk_image.md)
-   *  [The Recipe - DIY and Understand the Process](RECIPE.md)
+   *  [The Recipe - DIY Your Own and Understand the Process](RECIPE.md)
 *  [Possible Next Steps](#possible-next-steps)
 
 ## Quick Start
@@ -24,7 +24,7 @@ Download the latest disk image and validate it with the sha256sum and signature 
    *  A sha256sum hash of the disk image [usb_drive_disk_image-release-1.0.0.img.sha256sum](https://drive.google.com/file/d/182Cu5W91JWGJH73YXS_yLrzWFMi0QKWd/view?usp=sharing)
    *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-1.0.0.img.sha256sum.sig](https://drive.google.com/file/d/1YRoclFLjd-Kt-hsfE91CHGarpzcexH8E/view?usp=sharing)
 
-Use Rufus (Windows) or dd (MacOS and Linux) to write the disk image to a USB stick that is at least 16GB in size (larger is better). Do not just copy the disk image file to the USB stick. (If that last bit doesn't make sense please use the longer instructions.)
+Use Rufus (Windows) or dd (MacOS and Linux) to write the disk image to a USB stick that is at least 16GB in size (larger is much better). Do not just copy the disk image file to the USB stick. (If that last bit doesn't make sense please use the longer instructions.)
 
 Boot your computer from the USB stick using 'setup' as the password whenever asked and follow the instructions in the terminal window that opens automatically to complete the set-up. Enjoy! 
 
@@ -34,7 +34,7 @@ Sometimes a person realises a need to elevate their privacy requirements. In the
 
 ### What You Get
 
-The end result will be a fully functional Linux Mint installation that will run from a removable encrypted USB stick. The stick can be used to boot any UEFI compatible computer with an Intel or AMD CPU. It will function exactly as if it was installed on a hard drive, in that software can be added or removed, customised in any way, and all configuration and data changes will persist across boots. This is accomplished by installing Linux Mint and the GRUB boot loader to the USB stick as if it was a normal hard drive.
+The end result will be a fully functional Linux Mint installation that will run from a removable encrypted USB stick. The stick can be used to boot any UEFI compatible computer with a 64bit x86 CPU (AKA anything that runs Windows or an Intel based Mac). It will function exactly as if it was installed on a hard drive in that software can be added or removed, customised in any way, and all configuration and data changes will persist across boots. This is accomplished by installing Linux Mint and the GRUB boot loader to the USB stick as if it was a normal hard drive. Boot any computer with your USB stick and make it your own. Reboot without the USB stick and its back the way it was.
 
 ### Why Linux Mint?
 
@@ -46,11 +46,11 @@ The tools used are industry standard Libre / Open Source tools that have been we
 
 ### On Privacy, Security, And Trust
 
-This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than we ever will.  If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files.  This provides a foundation on which further privacy and security can be built, but it is important to remember that security is much more than privacy alone.
+This USB stick uses [LUKS](https://access.redhat.com/solutions/100463) (Linux Unified Key Setup) to provide full disk encryption of the USB stick. LUKS is an open specification industry standard that has been well vetted by people who know far more about encryption than we ever will. If you pair LUKS with a strong passphrase and do not share that passphrase you can rest assured that no one will be able to read your files. This provides a foundation on which further privacy and security can be built, but it is important to remember that security is much more than privacy alone.
 
 Encryption and account security is only as good as the passwords that protect them. Consider using a password manager (like the included Bitwarden) and never reuse a password. A passphrase is often easier to remember and provides better security than a complicated password. An example might be “Yellow dogs can’t play with wet spiders” (please don't use this example). In the rest of this document I will use the term passphrase instead of password as a nudge in that direction.
 
-There's a saying in System Administration, I know I'm paranoid, but am I paranoid enough? Security is not an absolute. Different people or organisations face different security risks and requirements. You are a much better judge of the risks you face than I am. Broadly speaking, the aspects to consider are the applications used, their configuration, and your network usage. These are enormous topics that can not be properly covered here. The general compromise tends to be around usability versus security. For many situations the compromises made in the default Linux Mint install provide what I consider a well balanced starting point. It provides a solid foundation on which to build.
+There's a saying in System Administration, I know I'm paranoid, but am I paranoid enough? Security is not an absolute. Different people or organisations face different security risks and requirements. You are a much better judge of the risks you face than I am. Broadly speaking, the aspects to consider are the applications used, their configuration, and your network usage. These are enormous topics that can not be properly covered here. The general compromise tends to be around usability versus security. For many situations the compromises made in the default Linux Mint install provide what I consider a well balanced starting point. It provides a solid foundation on which to build. 
 
 Trust is a hard one. We don't know each other. If you download and boot from the disk image we created you are implicitly trusting us not to do something nefarious. Maybe you are willing to take that risk, maybe you aren't. We have provided both the finished disk image _and_ the recipe used to create it in the hope that if you don't trust the disk image you will still find this useful because you can vet and follow the recipe to create your own disk image that you will be able to trust. We raise this issue because we think it is important for you to be aware of the issues around trust in software and computing in general.
 
@@ -66,7 +66,7 @@ We provide two paths to an encrypted USB stick based system, you can either down
 
 ### The Recipe
 
-The recipe describes the steps used to create the disk image discussed further below. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large) and to provide an automated way to help with the initial setup. By following the recipe you will be able to vet the steps taken, understand the process, and make any customisations you require.
+The recipe describes the steps used to create the disk image discussed further below. The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, 8+GB is still plenty large) and to provide an automated way to help with the initial setup. By following the recipe you will be able to vet the steps taken, understand the process, and make any customisations you require.
 
 You can find the [recipe instructions here](RECIPE.md).
 
@@ -87,9 +87,9 @@ You can find the [recipe instructions here](RECIPE.md).
 
 #### Validate the Disk Image
 
-Strictly speaking this step isn't necessary, however it is a Very Good Idea(tm). Validating the disk image assures you that the file has been downloaded properly, that it has not been altered in any way since being posted, and that it was posted by us.
+Strictly speaking this step isn't necessary, however it is a Very Good Idea(tm). Validating the disk image assures you that the file has been downloaded properly, that it has not been altered in any way since being posted, and that it was posted by us. This should be part of your decision about whether to trust the disk image or not. If it does not validate DO NOT use the disk image.
 
-At the time of writing the disk image version number is 0.9.1. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your Downloads directory. If you have saved the files somewhere else adjust the following commands accordingly.
+At the time of writing the disk image version number is 1.0.0. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your Downloads directory. If you have saved the files somewhere else adjust accordingly.
 
 ##### Check the SHA256sum of the Disk Image:
 
@@ -137,9 +137,12 @@ cat ~/Downloads/usb_drive_disk_image-release-1.0.0.img.sha256sum
 
 ##### Check the GPG Signature of the .sha256sum File 
 
-GPG (Gnu Privacy Guard) is available on Windows, MacOS, and Linux. Once installed the commands to use it are the same on each platform. GPG uses public key encryption which, among other things, allows you to confirm that a file has been signed by a specific secret key. In our case the .sha256sum file should be digitally signed by the key belonging to code(at)shitfuckery.ca. The signature is stored in the file ending with .sig. Confirming this will ensure that the files were posted by us because it is cryptographically impossible to change the disk image and create a matching .sha256sum file breaking our signature.
+GPG (Gnu Privacy Guard) is available on Windows, MacOS, and Linux. Once installed the commands to use it are the same on each platform. GPG uses public key encryption which, among other things, allows you to confirm that a file has been signed by a specific secret key. In our case the .sha256sum file should be digitally signed by the key belonging to code(at)shitfuckery.ca. The signature is stored in the file ending with .sig. Confirming this will ensure that the files were posted by us because it is cryptographically impossible to change the disk image and create a matching .sha256sum file without breaking our signature.
 
-GPG is installed by default on Linux. For Windows and MacOS use the following instructions.
+GPG is installed by default on Linux. For Windows and MacOS download GPG from the following links: 
+
+Windows - [https://www.gpg4win.org/](https://www.gpg4win.org/)
+MacOS - [https://gpgtools.org/](https://gpgtools.org/)
 
 ##### To Validate the Signature on Windows, MacOS, or Linux
 
@@ -213,28 +216,33 @@ Screenshot from Linux showing the before and after output:
 
 <img width="100%" alt="Linux screenshot showing the before and after plugging in the USB drive output of ls -l /dev/sd*" src="https://github.com/user-attachments/assets/35ad20e0-898f-4b38-afdc-bcbf501ce3bf" />
 
-The USB stick in this case is name /dev/sda. On your computer this may be different.
+The USB stick in this case is named /dev/sda. On your computer this may be different.
 
 With the drive name determined substitute it into the following command:
 
+MacOS:
 ```bash
 sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.0.img of=/dev/<name of your drive>
 ```
+Linux:
+```bash
+sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.0.img of=/dev/<name of your drive> status=progress
+```
 
-By default the dd command does not return any progress indication while it is running.  On MacOS you can press `<control>-T` to show progress and on linux you can add `status=progress` to the command (eg `dd if=disk.img of=/dev/<name of your drive> status=progress`).
+By default the dd command does not return any progress indication while it is running.  On MacOS you can press `<control>-T` to show progress and on linux you can add `status=progress` to the command.
 
 The dd command can be expected to take quite a while to run, with it being faster or slower depending on the speed of your USB stick. When it finishes the drive image will have been written to the USB stick.
 
 
 #### Boot the Computer Using the USB Stick
 
-Each computer has a special "hot key" that when pressed during the boot process will allow you to boot from a USB device. This key is often shown on the initial boot screen when the computer is powered on. On Framework and Dell computers pressing the `F12` key during the boot process will bring up the Boot Options menu and allow you to chose to boot from the USB Stick. On Macs holding down the `<option>` key while powering on the computer will bring up the Boot Options menu. On other computers the key may be different. Your computer's user manual will have this information and [this site](https://www.disk-image.com/faq-bootmenu.htm) has a good list of manufacturers and the hot key to press to bring up the Boot Menu. As you will see F12, ESC, F8, or F9 cover the most common ones.
+Each computer has a special "hot key" that, when pressed during the boot process, will allow you to boot from a USB device. This key is often shown on the initial boot screen when the computer is powered on. On Framework and Dell computers pressing the `F12` key during the boot process will bring up the Boot Options menu and allow you to chose to boot from the USB Stick. On Macs holding down the `<option>` key while powering on the computer will bring up the Boot Options menu. On other computers the key may be different. Your computer's user manual will have this information and [this site](https://www.disk-image.com/faq-bootmenu.htm) has a good list of manufacturers and the hot key to press to bring up the Boot Menu. As you will see F12, ESC, F8, or F9 cover the most common ones.
 
 With the USB stick connected to your computer power it on and press the hot key to bring up the boot options menu and select the USB stick to boot from it.
 
 Very shortly into the boot process you will see output similar to this screenshot where the bootloader asks for a password/passphrase to decrypt the USB stick so that it can continue the boot process. 
 
-
+FIX THIS - new screenshot
 <img width="100%" alt="Photo showing a computer screen and text asking the user to enter a password to decrypt the drive" src="https://github.com/user-attachments/assets/235d7c36-b819-4b71-bcb2-cc09238e745f" />
 
 
@@ -244,14 +252,13 @@ Enter the default disk encryption passphrase "setup" and press `Enter` to contin
 <img width="100%" alt="Photo showing the initial login window for Linux Mint. In this case the setup user is being prompted for their password." src="https://github.com/user-attachments/assets/605e2d84-c649-43eb-947e-d7b2eadb00e9" />
 
 
-
 #### Log in as setup with the Password setup
 
 Log in as the user setup with the password `setup`.
 
 A few seconds after you log in as the setup user a script will open a window like the one below. Follow the instructions in the script to set up your encrypted USB stick. The script will:
 
-  * Reencrypt the boot and root partitions so that they are using Volume Keys unique to your USB stick
+  * Reencrypt the boot and root partitions so that they are using encryption keys unique to your USB stick
   * Add your encryption passphrase to the boot and root partitions and remove the stock passphrase
   * Create a new user account for your use
   * Disable the stock 'setup' user
@@ -267,8 +274,7 @@ As you can see in the screenshot above, a warning about being low on disk space 
 
 If you have access to an internet connection please set it up so that the script can install Tor, Signal, and Chromium. Click on the icon in the bottom right circled in red in the screenshot below to connect to wifi.
 
-**** This screenshot needs to be fixed, link is currently broken ****
-
+FIX THIS - broken link
 <img width="100%" alt="A screenshot showing the wifi icon." src="https://github.com/user-attachments/assets/dd75b299-6349-463a-b274-b5823779c23c" />
 
 Congratulations, the hard part is done! Enjoy your new Linux Mint on an encrypted USB stick!
@@ -277,7 +283,7 @@ Congratulations, the hard part is done! Enjoy your new Linux Mint on an encrypte
 
 ##### Install Updates 
 
-Like any newly set-up computer there will be a lot of updates to install. Updates can be installed by clicking on the shield icon in the lower right of the screen. Please take care of this as soon as possible. You can expect there to be quite a lot of updates initially.
+Like any newly set-up computer there will be updates to install. Updates can be installed by clicking on the shield icon in the lower right of the screen. Please take care of this as soon as possible. You can expect there to be quite a lot of updates initially.
 
 <img width="100%" alt="Screenshot showing how to launch Update Manager" src="https://github.com/user-attachments/assets/817fc3ee-2855-4cc1-ae01-4516d73c69fc" />
 
