@@ -76,7 +76,7 @@ KEYFILE="/etc/luks/personalised-boot_os.keyfile";
 RESUME_DEV="/dev/mapper/LUKS_SWAP";
 OLDPASS="setup";
 OLDKEY="/etc/luks/boot_os.keyfile";
-BITWARDEN_DEB="/home/setup/Bitwarden-2025.7.0-amd64.deb";
+BITWARDEN_DEB="/home/setup/Bitwarden-2025.11.1-amd64.deb";
 SETUP_PROGRESS=".setup_progress";
 
 SETUP_HDPASS="hd_pass";
