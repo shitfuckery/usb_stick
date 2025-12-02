@@ -240,10 +240,10 @@ Each computer has a special "hot key" that, when pressed during the boot process
 
 With the USB stick connected to your computer power it on and press the hot key to bring up the boot options menu and select the USB stick to boot from it.
 
-Very shortly into the boot process you will see output similar to this screenshot where the bootloader asks for a password/passphrase to decrypt the USB stick so that it can continue the boot process. 
+Very shortly into the boot process you will see output similar to this screenshot where the bootloader asks for a passphrase to decrypt the USB stick so that it can continue the boot process. 
 
-FIX THIS - new screenshot
-<img width="100%" alt="Photo showing a computer screen and text asking the user to enter a password to decrypt the drive" src="https://github.com/user-attachments/assets/235d7c36-b819-4b71-bcb2-cc09238e745f" />
+
+<img width="100%" alt="Photo showing a computer screen and text asking the user to enter a passphrase to decrypt the drive" src="https://github.com/user-attachments/assets/495a1840-7d40-4070-b896-95b8e1805354" />
 
 
 Enter the default disk encryption passphrase "setup" and press `Enter` to continue. Be aware that the screen will not show your keypresses as you type in the passphrase and there will be a notable delay while the decryption happens before the boot process continues. Please be patient.  If you have entered the passphrase correctly you will eventually end up at a screen that looks like the following screenshot. If that is not the case the passphrase was not entered correctly, reboot your computer to try again.
