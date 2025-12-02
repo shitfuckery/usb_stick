@@ -274,8 +274,11 @@ As you can see in the screenshot above, a warning about being low on disk space 
 
 If you have access to an internet connection please set it up so that the script can install Tor, Signal, and Chromium. Click on the icon in the bottom right circled in red in the screenshot below to connect to wifi.
 
-FIX THIS - broken link
+
+
 <img width="100%" alt="A screenshot showing the wifi icon." src="https://github.com/user-attachments/assets/dd75b299-6349-463a-b274-b5823779c23c" />
+
+
 
 Congratulations, the hard part is done! Enjoy your new Linux Mint on an encrypted USB stick!
 

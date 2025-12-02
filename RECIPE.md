@@ -47,7 +47,7 @@ You will need:
 
 The first step is to boot your computer with the Linux Mint Debian Installer USB stick. Every computer has a special keyboard key that can to be pressed shortly after turning it on that will allow it to boot from USB. The Linux Mint installation instructions have a [good write-up](https://linuxmint-installation-guide.readthedocs.io/en/latest/boot.html) on how to determine which key to press for your computer. On a Dell, for instance, pressing F12 after powering it on brings up the Boot Options menu. ESC, F8, and F9 are other common options. Check your computer manual for a definitive answer.
 
-FIX THIS - broken image
+
 <img alt="A screenshot of the Linux Mint desktop as seen after first booting. The icon for launching the terminal is circled in red." src="https://github.com/user-attachments/assets/b7896c10-32ca-4f6e-938f-a5cc6289f10d" width="100%">
 
 
@@ -220,14 +220,11 @@ sudo live-installer-expert-mode
 
 This will open a new window like the one shown in the screenshot below.
 
-FIX THIS - new screenshot
-
 
 <img width="100%" alt="A screenshot showing the opening screen of the LMDE installer." src="https://github.com/user-attachments/assets/fdc00fbb-3430-4a9e-ae0d-d9440b98e667" />
 
 
-
-Click on the "Lets go!" button to continue. This will open a screen like the one shown below.
+Click on the "Lets go!" button to continue. This will advance to a screen like the one shown below.
 
 
 <img width="100%" alt="A screenshot showing the language and location selector." src="https://github.com/user-attachments/assets/076dfb9f-d39c-451d-9397-3c421a72c14e" />
@@ -279,7 +276,7 @@ The screenshot above shows the manual partitioning screen. **Click the Expert Mo
 The screenshot above shows the manual partitioning expert mode screen. The installation process will pause at this screen so that we can manually mount the various filesystems we created earlier.
 
 
-** FIX THIS - screenshot of terminal window showing how to open a new tab
+
 <img width="100%" alt="A screenshot showing the terminal window with text output from starting the live-installer-expert-mode prior to opening a new terminal in a tab." src="https://github.com/user-attachments/assets/0bac0c25-a087-409b-b31d-368605576d65" />
 
 
@@ -654,8 +651,10 @@ We will use the program dd to create the disk image file of the USB drive. The f
 sudo sgdisk --print /dev/sdTARGET
 ```
 
-** FIX THIS so that it uses the new drive size
+
+
 <img width="100%" alt="Output of the command `sgdisk --print /dev/sdb`" src="https://github.com/user-attachments/assets/ccb67bb0-cf7b-419d-966e-cdd26669bc96" />
+
 
 
 Based on the information shown above we know that the last partition ends at sector 18094079 and that each sector is 512 bytes in size. We will need an additional 34 sectors at the end of the disk image to accomodate the backup GPT header and partition table, for a total of 18094113. If you changed the size of your root partition your numbers will be different so make sure you substitute them + 34 in the dd command below. Also be sure to replace SAVE with the appropriate drive letter for the USB stick you are saving the disk image to. If using a third USB stick this would be `/dev/sdSAVE1/usb_drive_disk_image.img`. Note that we are assuming there is only 1 partition on the USB stick you are saving to, if that's not the case replace the 1 in the commands below with the appropriate partition number.
