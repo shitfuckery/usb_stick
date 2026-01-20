@@ -423,7 +423,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT ]; then
 		echo "deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main" |\
 			sudo tee /etc/apt/sources.list.d/signal-xenial.list
 		apt-get update
-		apt-get install -y signal-desktop torbrowser-launcher chromium
+		apt-get install -y signal-desktop torbrowser-launcher chromium wireguard-tools systemd-resolved
 
 		touch ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT
 
