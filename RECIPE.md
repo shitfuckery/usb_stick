@@ -627,10 +627,10 @@ Download Bitwarden and make it available.
 
 The last bit of customisation to finish off the recipe is the installation of the Bitwarden Linux client. While it's great that Bitwarden provide the Linux client in a .deb format, unfortunately it is not in a proper repository so it can not be installed with apt-get.  Additionally the download process requires javascript, so we can not easily script it's download, so it has to be done manually.
 
-Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2025.7.0-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
+Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2026.3.1-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
 
 ```bash
-sudo cp ~/Downloads/Bitwarden-2025.11.1-amd64.deb /target/home/setup/
+sudo cp ~/Downloads/Bitwarden-2026.3.1-amd64.deb /target/home/setup/
 ```
 
 As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
