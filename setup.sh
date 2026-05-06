@@ -161,11 +161,11 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
 	{
 		echo "This will take a few minutes..."
 		echo ""
-		echo "\ZbReencrypting the boot partition...\Zn"
+		echo "Reencrypting the boot partition..."
 		echo ""
 		echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --progress-frequency 10 --key-file - --key-slot 2 ${DRIVEDEVICE}1
 		echo ""
-		echo "\ZbReencrypting the root partition..\Zn"
+		echo "Reencrypting the root partition..."
 		echo ""
 		echo -n "${DRIVEPASSPHRASE}" | cryptsetup open ${DRIVEDEVICE}1 LUKS_BOOT
 		mount /dev/mapper/LUKS_BOOT /boot
@@ -173,7 +173,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
 
 	# LUKS2 can be reencrypted while mounted and in use.
 	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --progress-frequency 10 --key-file - --key-slot 2 ${DRIVEDEVICE}4
-	} 2>&1 | dialog --colors --erase-on-exit --progressbox "Reencrypting the drive so that the underlying volume key is unique to this USB stick." 21 72 
+	} 2>&1 | dialog --erase-on-exit --progressbox "Reencrypting the drive so that the underlying volume key is unique to this USB stick." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
 
