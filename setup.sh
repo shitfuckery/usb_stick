@@ -141,7 +141,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 		echo -n "${OLDPASS}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - ${DRIVEDEVICE}4 pipe &
 		echo -n "${DRIVEPASSPHRASE}" > pipe
 		rm pipe
-	} 2>&1 | dialog --erase-on-exit --progressbox "Updating drive encryption with your new passphrase..." 20 75 
+	} 2>&1 | dialog --erase-on-exit --progressbox "Updating drive encryption with your new passphrase..." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_HDPASS
 
@@ -173,7 +173,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
 
 	# LUKS2 can be reencrypted while mounted and in use.
 	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --progress-frequency 10 --key-file - --key-slot 2 ${DRIVEDEVICE}4
-	} 2>&1 | dialog --colors --erase-on-exit --progressbox "Reencrypting the drive so that the underlying volume key is unique to this USB stick." 20 75 
+	} 2>&1 | dialog --colors --erase-on-exit --progressbox "Reencrypting the drive so that the underlying volume key is unique to this USB stick." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
 
@@ -199,7 +199,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE ]; then
 		echo ""
 		echo "Adding new key to root..."
 		echo -n "${DRIVEPASSPHRASE}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - --new-keyfile $KEYFILE ${DRIVEDEVICE}4 $KEYFILE
-	} 2>&1 | dialog --erase-on-exit --progressbox "Adding an encryption keyfile unique to this USB stick..." 20 75 
+	} 2>&1 | dialog --erase-on-exit --progressbox "Adding an encryption keyfile unique to this USB stick..." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_HDKEYFILE
 
@@ -340,7 +340,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_GROWFS ]; then
 		sed -i -e 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="resume=${RESUME_UUID}"/' /etc/default/grub
 		update-grub
 		update-initramfs -u -k all
-	} 2>&1 | dialog --erase-on-exit --progressbox "Expanding the filesystem so that it uses the whole USB stick..." 20 75 
+	} 2>&1 | dialog --erase-on-exit --progressbox "Expanding the filesystem so that it uses the whole USB stick..." 21 72 
 
 	# Mark section complete
 	touch ~/$SETUP_PROGRESS/$SETUP_GROWFS
@@ -398,7 +398,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT ]; then
 				sudo tee /etc/apt/sources.list.d/signal-xenial.list
 			apt-get update
 			apt-get install -y signal-desktop torbrowser-launcher chromium wireguard-tools systemd-resolved
-		} 2>&1 | dialog --erase-on-exit --progressbox "Installing Signal, Tor, Chromium, Wireguard and related software from the network..." 20 75 
+		} 2>&1 | dialog --erase-on-exit --progressbox "Installing Signal, Tor, Chromium, Wireguard and related software from the network..." 21 72 
 
 		touch ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT
 
@@ -428,7 +428,7 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_BITWARDEN ]; then
 	{
 		dpkg -i $BITWARDEN_DEB 
 		rm -f $BITWARDEN_DEB
-	} 2>&1 | dialog --erase-on-exit --progressbox "Installing Bitwarden password manager..." 20 75 
+	} 2>&1 | dialog --erase-on-exit --progressbox "Installing Bitwarden password manager..." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_BITWARDEN
 
