@@ -20,9 +20,9 @@
 
 Download the latest disk image and validate it with the sha256sum and signature files.
 
-   *  The Disk Image [usb_drive_disk_image-release-1.0.0.img](https://drive.google.com/file/d/1tHBQ-anC2x7jOjdHmUkHUQGtWHuBAEa1/view?usp=sharing)
-   *  A sha256sum hash of the disk image [usb_drive_disk_image-release-1.0.0.img.sha256sum](https://drive.google.com/file/d/182Cu5W91JWGJH73YXS_yLrzWFMi0QKWd/view?usp=sharing)
-   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-1.0.0.img.sha256sum.sig](https://drive.google.com/file/d/1YRoclFLjd-Kt-hsfE91CHGarpzcexH8E/view?usp=sharing)
+   *  The Disk Image [usb_drive_disk_image-release-1.0.1.img](https://drive.google.com/file/d/1M3Aeu9Icm7-tvmDO5LJEf08odGyvV9g9/view?usp=sharing)
+   *  A sha256sum hash of the disk image [usb_drive_disk_image-release-1.0.1.img.sha256sum](https://drive.google.com/file/d/1SyshEk7VLiTdwWowH0A6mGcEyYURAhJq/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-1.0.1.img.sha256sum.sig](https://drive.google.com/file/d/1dLAiyIVHZshxmR6IArkCBuCfMDHQcqpP/view?usp=sharing)
 
 Use Rufus (Windows) or dd (MacOS and Linux) to write the disk image to a USB stick that is at least 16GB in size (larger is much better). Do not just copy the disk image file to the USB stick. (If that last bit doesn't make sense please use the longer instructions.)
 
@@ -75,9 +75,9 @@ You can find the [recipe instructions here](RECIPE.md).
 #### Requirements
 
 *  The following 3 files downloaded to your computer:
-   *  The Disk Image [usb_drive_disk_image-release-1.0.0.img](https://drive.google.com/file/d/1tHBQ-anC2x7jOjdHmUkHUQGtWHuBAEa1/view?usp=drive_link)
-   *  An SHA256 hash of the disk image [usb_drive_disk_image-release-1.0.0.img.sha256sum](https://drive.google.com/file/d/182Cu5W91JWGJH73YXS_yLrzWFMi0QKWd/view?usp=drive_link)
-   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-1.0.0.img.sha256sum.sig](https://drive.google.com/file/d/1YRoclFLjd-Kt-hsfE91CHGarpzcexH8E/view?usp=drive_link)
+   *  The Disk Image [usb_drive_disk_image-release-1.0.1.img](https://drive.google.com/file/d/1M3Aeu9Icm7-tvmDO5LJEf08odGyvV9g9/view?usp=sharing)
+   *  An SHA256 hash of the disk image [usb_drive_disk_image-release-1.0.1.img.sha256sum](https://drive.google.com/file/d/1SyshEk7VLiTdwWowH0A6mGcEyYURAhJq/view?usp=sharing)
+   *  A GPG signature of the sha256sum file using code(at)shitfuckery.ca's GPG key [usb_drive_disk_image-release-1.0.1.img.sha256sum.sig](https://drive.google.com/file/d/1dLAiyIVHZshxmR6IArkCBuCfMDHQcqpP/view?usp=sharing)
 *  A USB stick that is at least 16GB in size. A larger USB stick will provide more room for your own software and files. We typically use 128GB sticks, but the size you need will depend on the size of files you intend to use and how much additional software you intend to install.
 *  Windows users will need the program [Rufus](https://rufus.ie/en/) to write the disk image onto a USB stick.
 *  Gnu Privacy Guard (GPG) for confirming the integrity of the disk image.
@@ -89,7 +89,7 @@ You can find the [recipe instructions here](RECIPE.md).
 
 Strictly speaking this step isn't necessary, however it is a Very Good Idea(tm). Validating the disk image assures you that the file has been downloaded properly, that it has not been altered in any way since being posted, and that it was posted by us. This should be part of your decision about whether to trust the disk image or not. If it does not validate DO NOT use the disk image.
 
-At the time of writing the disk image version number is 1.0.0. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your Downloads directory. If you have saved the files somewhere else adjust accordingly.
+At the time of writing the disk image version number is 1.0.1. If the version number has changed update the following commands accordingly. The following commands assume you have saved the files to your Downloads directory. If you have saved the files somewhere else adjust accordingly.
 
 ##### Check the SHA256sum of the Disk Image:
 
@@ -99,39 +99,39 @@ An SHA256sum is a hash of seemingly random characters calculated based on the co
 Open a cmd prompt (press the windows key and type cmd then press enter) and type the following:
 
 ```bash
-certutil -hashfile C:\Users\user1\Downloads\usb_drive_disk_image-release-1.0.0.img SHA256
+certutil -hashfile C:\Users\user1\Downloads\usb_drive_disk_image-release-1.0.1.img SHA256
 ```
 
-Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.0.img.sha256sum file:
+Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.1.img.sha256sum file:
 
 ```bash
-type C:\Users\user1\Downloads\usb_drive_disk_image-release-1.0.0.img.sha256sum
+type C:\Users\user1\Downloads\usb_drive_disk_image-release-1.0.1.img.sha256sum
 ```
 
 ###### MacOS:
 Open a terminal and type the following:
 
 ```bash
-shasum -a 256 ~/Downloads/usb_drive_disk_image-release-1.0.0.img
+shasum -a 256 ~/Downloads/usb_drive_disk_image-release-1.0.1.img
 ```
 
-Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.0.img.sha256sum file:
+Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.1.img.sha256sum file:
 
 ```bash
-cat ~/Downloads/usb_drive_disk_image-release-1.0.0.img.sha256sum
+cat ~/Downloads/usb_drive_disk_image-release-1.0.1.img.sha256sum
 ```
 
 ###### Linux:
 Open a terminal and type the following:
 
 ```bash
-sha256sum ~/Downloads/usb_drive_disk_image-release-1.0.0.img
+sha256sum ~/Downloads/usb_drive_disk_image-release-1.0.1.img
 ```
 
-Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.0.img.sha256sum file:
+Compare the output from the previous command with the contents of the usb_drive_disk_image-release-1.0.1.img.sha256sum file:
 
 ```bash
-cat ~/Downloads/usb_drive_disk_image-release-1.0.0.img.sha256sum
+cat ~/Downloads/usb_drive_disk_image-release-1.0.1.img.sha256sum
 ```
 
 
@@ -155,7 +155,7 @@ gpg --keyserver keyserver.ubuntu.com --search-keys code@shitfuckery.ca
 Verify that the .sha256sum file was signed by our secret GPG key using the following command:
 
 ```bash
-gpg --verify ~/Downloads/usb_drive_disk_image-release-1.0.0.img.sha256sum.sig ~/Downloads/usb_drive_disk_image-release-1.0.0.img.sha256sum
+gpg --verify ~/Downloads/usb_drive_disk_image-release-1.0.1.img.sha256sum.sig ~/Downloads/usb_drive_disk_image-release-1.0.1.img.sha256sum
 ```
 
 The output of the above command should include text along the lines of the following:
@@ -222,11 +222,11 @@ With the drive name determined substitute it into the following command:
 
 MacOS:
 ```bash
-sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.0.img of=/dev/<name of your drive>
+sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.1.img of=/dev/<name of your drive>
 ```
 Linux:
 ```bash
-sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.0.img of=/dev/<name of your drive> status=progress
+sudo dd if=~/Downloads/usb_drive_disk_image-release-1.0.1.img of=/dev/<name of your drive> status=progress
 ```
 
 By default the dd command does not return any progress indication while it is running.  On MacOS you can press `<control>-T` to show progress and on linux you can add `status=progress` to the command.
