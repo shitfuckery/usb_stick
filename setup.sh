@@ -396,8 +396,10 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT ]; then
 			cat /tmp/signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
 			echo "deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main" |\
 				sudo tee /etc/apt/sources.list.d/signal-xenial.list
+                        curl -sL -o /etc/apt/trusted.gpg.d/morph027-signal-cli.asc https://packaging.gitlab.io/signal-cli/gpg.key
+                        echo "deb https://packaging.gitlab.io/signal-cli signalcli main" | tee /etc/apt/sources.list.d/morph027-signal-cli.list
 			apt-get update
-			apt-get install -y signal-desktop torbrowser-launcher chromium wireguard-tools systemd-resolved
+			apt-get install -y signal-desktop signal-cli-jre torbrowser-launcher chromium wireguard-tools systemd-resolved
 		} 2>&1 | dialog --erase-on-exit --progressbox "Installing Signal, Tor, Chromium, Wireguard and related software from the network..." 21 72 
 
 		touch ~/$SETUP_PROGRESS/$SETUP_INSTALLNETSOFT
