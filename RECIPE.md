@@ -100,7 +100,7 @@ sudo sgdisk --zap-all /dev/sdTARGET
 The following commands create the 4 partitions we need:
 
 ```bash
-sudo sgdisk --new=1:0:+512M /dev/sdTARGET
+sudo sgdisk --new=1:0:+768M /dev/sdTARGET
 ```
 ```bash
 sudo sgdisk --new=2:0:+2M /dev/sdTARGET
