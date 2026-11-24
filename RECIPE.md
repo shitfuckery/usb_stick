@@ -121,47 +121,19 @@ sudo sgdisk --typecode=1:8301 --typecode=2:ef02 --typecode=3:ef00 --typecode=4:8
 sudo sgdisk --change-name=1:boot --change-name=2:GRUB --change-name=3:EFI-SP --change-name=4:rootfs /dev/sdTARGET
 ```
 
-### Encrypt the USB Stick Partitions
-
-We will be encrypting the 1st and 4th partitions, the ones used for the boot and root filesystems. The 2nd (bootloader) and 3rd (UEFI) will not be encrypted. Were we adding a swap partition we would want to encrypt it too, but because we are making as small a disk image as possible we are not adding a swap partition. The unencrypted 2nd and 3rd partitions will never hold any of your files or operating system files and no information can be gleened about your files or operating system from them.
-
-We will be using LUKS version 1 to format the boot partition because GRUB, the bootloader we will be using, is able to decrypt LUKS v1 partitions, but not LUKS v2. GRUB needs to be able to decrypt the boot partition in order to load the kernel and the encryption key that is in turn used to decrypt the root partition.
-
-When running the cryptsetup commands below you will be asked to provide a passphrase. We have used the horribly insecure passphrase 'setup' throughout the creation of the disk image and then run a script to change every instance to something more secure on first boot. If you want to use the same automation script you can use the same 'setup' throughout or, if you change it, update the setup.sh script to match. If you don't plan to use the automation script we suggest using a much stronger passphrase and using the same passphrase for all of your partitions.
+### Format the Partitions
 
 > [!NOTE]
 > Many of the following commands include a partition number after the TARGET (eg /dev/sdTARGET1), be sure to leave that number in place when changing TARGET to your drive letter (eg /dev/sdb1).
 
 ```bash
-sudo cryptsetup luksFormat --type=luks1 /dev/sdTARGET1
-```
-```bash
-sudo cryptsetup luksFormat /dev/sdTARGET4
-```
-
-### Open The Encrypted Partitions
-
-Now that the boot and root partitions have been encrypted they need to be decrypted, or opened, before we can continue. You will be asked for a passphrase, use the same one you used in the previous step.
-
-```bash
-sudo cryptsetup open /dev/sdTARGET1 LUKS_BOOT
-```
-```bash
-sudo cryptsetup open /dev/sdTARGET4 LUKS_ROOT
-```
-
-With the commands above the names LUKS_BOOT and LUKS_ROOT are applied to the decrypted partitions, they are then made available at /dev/mapper/LUKS_BOOT and /dev/mapper/LUKS_ROOT where they can be treated like a normal partition.
-
-### Format the Partitions
-
-```bash
-sudo mkfs.ext4 -L boot /dev/mapper/LUKS_BOOT
+sudo mkfs.ext4 -L boot /dev/sdTARGET1
 ```
 ```bash
 sudo mkfs.vfat -F 16 -n EFI-SP /dev/sdTARGET3
 ```
 ```bash
-sudo mkfs.btrfs -L root /dev/mapper/LUKS_ROOT
+sudo mkfs.btrfs -L root /dev/sdTARGET4
 ```
 
 You may notice we have not formatted the /dev/sdTARGET2 partition. It will be used for the bootloader (GRUB) and does not use a filesystem.
@@ -171,7 +143,7 @@ You may notice we have not formatted the /dev/sdTARGET2 partition. It will be us
 We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
 
 ```bash
-sudo mount -o subvol=/ /dev/mapper/LUKS_ROOT /mnt
+sudo mount -o subvol=/ /dev/sdTARGET4 /mnt
 ```
 ```bash
 cd /mnt
@@ -289,13 +261,13 @@ We will create a directory called /target and mount the various filesystems we c
 sudo mkdir -p /target
 ```
 ```bash
-sudo mount -o subvol=@ /dev/mapper/LUKS_ROOT /target
+sudo mount -o subvol=@ /dev/sdTARGET4 /target
 ```
 ```bash
 sudo mkdir -p /target/boot
 ```
 ```bash
-sudo mount /dev/mapper/LUKS_BOOT /target/boot
+sudo mount /dev/sdTARGET1 /target/boot
 ```
 ```bash
 sudo mkdir -p /target/boot/efi
@@ -370,7 +342,8 @@ The file /etc/fstab (found at /target/etc/fstab during installation) describes t
 sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c 'echo "/dev/mapper/LUKS_ROOT / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0" >> /target/etc/fstab'
+# TODO PARTUUID update?
+sudo bash -c 'echo "/dev/sdTARGET4 / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0" >> /target/etc/fstab'
 ```
 ```bash
 sudo bash -c 'echo "/dev/mapper/LUKS_BOOT /boot ext4 defaults,noatime 0 1" >> /target/etc/fstab'
@@ -383,54 +356,6 @@ sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /root btrfs defaults,noatime,ssd,compr
 ```
 ```bash
 sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /snapshots btrfs defaults,noatime,ssd,compress=lzo,subvol=@snapshots 0 4" >> /target/etc/fstab'
-```
-
-### Create an Encryption Key File
-
-The following commands will create a 4KB file of "random stuff" that will serve as an encryption key for the encrypted partitions. This initial key will be replaced by a unique key when the setup script is run by the end user.
-
-```bash
-sudo mkdir -p /target/etc/luks
-```
-```bash
-sudo dd if=/dev/urandom of=/target/etc/luks/boot_os.keyfile bs=1024 count=4
-```
-
-### Create the /target/etc/crypttab File
-
-The file /etc/crypttab (found at /target/etc/crypttab during installation) is used to decrypt the encrypted partitions and to map them to the correct filesystem in the fstab file created earlier. Use the following commands to create it:
-
-```bash
-sudo bash -c 'echo "LUKS_BOOT UUID=$(blkid -s UUID -o value /dev/sdTARGET1) /etc/luks/boot_os.keyfile luks,discard" >> /target/etc/crypttab'
-```
-```bash
-sudo bash -c 'echo "LUKS_ROOT UUID=$(blkid -s UUID -o value /dev/sdTARGET4) /etc/luks/boot_os.keyfile luks,discard" >> /target/etc/crypttab'
-```
-```bash
-sudo chmod 500 /target/etc/luks
-```
-```bash
-sudo chmod 400 /target/etc/luks/boot_os.keyfile
-```
-
-### Configure LUKS and GRUB to Work Together
-
-Configure LUKS and Grub to be able to decrypt the filesystem. When you run the two cryptsetup commands you will be asked to enter the passphrase that was used to encrypt the partitions earlier.
-
-```bash
-sudo bash -c 'echo "KEYFILE_PATTERN=/etc/luks/*.keyfile" >> /target/etc/cryptsetup-initramfs/conf-hook'
-```
-```bash
-sudo bash -c 'echo "UMASK=0077" >> /target/etc/initramfs-tools/initramfs.conf'
-```
-```bash
-sudo cryptsetup luksAddKey /dev/sdTARGET1 /target/etc/luks/boot_os.keyfile
-```
-```bash
-sudo cryptsetup luksAddKey /dev/sdTARGET4 /target/etc/luks/boot_os.keyfile
-```
-```bash
-sudo bash -c 'echo "GRUB_ENABLE_CRYPTODISK=y" >> /target/etc/default/grub'
 ```
 
 ### Allow Installer To Finish
