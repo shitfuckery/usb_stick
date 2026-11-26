@@ -9,15 +9,10 @@
 *  [Boot the Linux Mint Debian Edition Installer](#boot-the-linux-mint-debian-edition-installer)
 *  [Determine the Target USB Drive Letter](#determine-the-target-usb-drive-letter)
 *  [Partition the Target USB Stick](#partition-the-target-usb-stick)
-*  [Encrypt the USB Stick Partitions](#encrypt-the-usb-stick-partitions)
-*  [Open the Encrypted Partitions](#open-the-encrypted-partitions)
 *  [Format the Partitions](#format-the-partitions)
 *  [Setup BTRFS Subvolumes](#setup-btrfs-subvolumes)
 *  [Run the Live Installere in Expert Mode](#run-the-live-installer-in-expert-mode)
 *  [Create /target/etc/fstab File](#create-targetetcfstab-file)
-*  [Create an Encryption Key File](#create-an-encryption-key-file)
-*  [Create the /target/etc/crypttab File](#create-the-targetetccrypttab-file)
-*  [Configure LUKS and GRUB to Work Together](#configure-luks-and-grub-to-work-together)
 *  [Connect to the Internet](#connect-to-the-internet)
 *  [Create Initial RAM Disk](#create-initial-ram-disk)
 *  [Install GRUB](#install-grub)
@@ -34,12 +29,14 @@
 
 This recipe describes the steps used to create a complete Linux Mint system on an encrypted USB stick matching the disk image that can be downloaded from the [README.md](README.md). The intention was to create as small a disk image as possible so that it could be redistributed without people having to download too large a file (yes, it is still very large) and to provide an automated way for the end user to complete the setup process. By following this recipe you will be able to vet the steps taken and create your own disk image with any customisations you require.
 
+In an [earlier version of this recipe](https://github.com/shitfuckery/usb_stick/blob/1.0/RECIPE.md) the boot and root partitions were encrypted at the outset. This version handles encryption in the setup.sh script, which results in a much smaller disk image to distribute. If you are intending to create a one-off encrypted USB stick for your use and disk image size isn't a concern you may want to consider the [earlier recipe](https://github.com/shitfuckery/usb_stick/blob/1.0/RECIPE.md).
+
 ### Requirements 
 
 You will need:
 * A 64bit x86 (Intel or AMD CPU) based computer with two free USB ports
 * A USB stick with the [Linux Mint Debian Edition (LMDE)](https://linuxmint.com/download_lmde.php) installer loaded on it. Use the Linux Mint [Create bootable media](https://linuxmint-installation-guide.readthedocs.io/en/latest/) documentation for information on how to do this.
-* A blank USB stick that is at least 9GB in size. Note that this is the absolute minimum size and is only large enough for creating the disk image. For actual use 16GB should be considered the absolute bare minimum and larger is definitely be better.
+* A blank USB stick that is at least 10GB in size. Note that this is the absolute minimum size and is only large enough for creating the disk image. For actual use 16GB should be considered the absolute bare minimum and larger would definitely be better.
 * A working Internet connection will be necessary to install some of the necessary software.
 * A place to save the resulting disk image. This could be a third USB stick, a remote computer, the local hard drive, or somewhere else. 
 
@@ -74,7 +71,7 @@ This will result in output that will look similar to the following screenshot.
 
 <img width="100%" alt="A screenshot showing sample output of the command ls -l /dev/sd*" src="https://github.com/user-attachments/assets/16b1fa01-ea72-4e8c-883e-3ae78d1f8c96" />
 
-The sameple output shown above shows a single drive (/dev/sda) with two partitions (sda1 and sda2). You may see additional drives in your output, this is normal and not a problem.
+The sample output shown above shows a single drive (/dev/sda) with two partitions (sda1 and sda2). You may see additional drives in your output, this is normal and not a problem.
 
 Now insert the Target USB stick and run the `ls -l /dev/sd*` command again, comparing the output against the earlier output. You will see a new drive listed.
 
@@ -89,7 +86,7 @@ It is very important to go through the process of finding the correct Target USB
 
 ### Partition the Target USB Stick
 
-Partitioning a drive is a way to set aside space for particular uses. Modern computers use a UEFI system to boot the operating system, or OS. For our purposes this requires at least 4 partitions. One for the UEFI info, one for the bootloader, one for the boot partition, and root for everything else. Notable by its absence is a swap partition. [Later in this recipe](#automate-system-set-up) a script is added that will automate the process of creating a swap partition after first boot. This allows us to keep the disk image relatively small.
+Partitioning a drive is a way to set aside space for particular uses. Modern computers use a UEFI system to boot the operating system, or OS. For our purposes this requires at least 4 partitions. One for the UEFI info, one for the bootloader, one for the boot partition, and one for everything else. Notable by its absence is a swap partition. [Later in this recipe](#automate-system-set-up) a script is added that will automate the process of creating a swap partition after first boot. This allows us to keep the disk image relatively small.
 
 We start by deleting any existing partitions on the Target USB stick:
 
@@ -140,7 +137,7 @@ You may notice we have not formatted the /dev/sdTARGET2 partition. It will be us
 
 ### Setup BTRFS Subvolumes
 
-We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful.
+We are using [BTRFS](https://btrfs.readthedocs.io/en/latest/) for the root partition because it has sophisticated features, such as subvolumes and snapshotting, that some users may find useful. Mint's built-in backup system can make use of BTRFS snapshots.
 
 ```bash
 sudo mount -o subvol=/ /dev/sdTARGET4 /mnt
@@ -182,7 +179,7 @@ sudo umount /mnt
 
 ### Run the Live Installer In Expert Mode
 
-Linux Mint has a graphical install program that makes installation very easy. It does not directly support installing to an encrypted USB stick, however by using its expert mode in conjunction with some terminal commands we can get around this.
+Linux Mint has a graphical install program that makes installation very easy. It does not directly support installing to a USB stick, however by using its expert mode in conjunction with some terminal commands we can get around this.
 
 To start the live installer in expert mode enter the following command into the terminal:
 
@@ -279,19 +276,19 @@ sudo mount /dev/sdTARGET3 /target/boot/efi
 sudo mkdir -p /target/home
 ```
 ```bash
-sudo mount -o subvol=@home /dev/mapper/LUKS_ROOT /target/home
+sudo mount -o subvol=@home /dev/sdTARGET4 /target/home
 ```
 ```bash
 sudo mkdir -p /target/root
 ```
 ```bash
-sudo mount -o subvol=@root /dev/mapper/LUKS_ROOT /target/root
+sudo mount -o subvol=@root /dev/sdTARGET4 /target/root
 ```
 ```bash
 sudo mkdir -p /target/snapshots
 ```
 ```bash
-sudo mount -o subvol=@snapshots /dev/mapper/LUKS_ROOT /target/snapshots
+sudo mount -o subvol=@snapshots /dev/sdTARGET4 /target/snapshots
 ```
 
 All of the filesystems necessary to install to the Target USB stick should now be mounted under /target. To confirm this run the following command and compare your results to the screenshot shown below.
@@ -300,6 +297,7 @@ All of the filesystems necessary to install to the Target USB stick should now b
 df -h
 ```
 
+# TODO replace this screenshot
 <img width="100%" alt="A screenshot showing the output of the `df -h` command." src="https://github.com/user-attachments/assets/440f2bf0-1384-4451-bf57-539589bf7fc2" />
 
 
@@ -342,20 +340,19 @@ The file /etc/fstab (found at /target/etc/fstab during installation) describes t
 sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET3) /boot/efi vfat umask=0077 0 1" >> /target/etc/fstab'
 ```
 ```bash
-# TODO PARTUUID update?
-sudo bash -c 'echo "/dev/sdTARGET4 / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0" >> /target/etc/fstab'
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET4) / btrfs defaults,noatime,ssd,compress=lzo,subvol=@ 0 0" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c 'echo "/dev/mapper/LUKS_BOOT /boot ext4 defaults,noatime 0 1" >> /target/etc/fstab'
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET1) /boot ext4 defaults,noatime 0 1" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /home btrfs defaults,noatime,ssd,compress=lzo,subvol=@home 0 2" >> /target/etc/fstab'
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET4) /home btrfs defaults,noatime,ssd,compress=lzo,subvol=@home 0 2" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /root btrfs defaults,noatime,ssd,compress=lzo,subvol=@root 0 3" >> /target/etc/fstab'
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET4) /root btrfs defaults,noatime,ssd,compress=lzo,subvol=@root 0 3" >> /target/etc/fstab'
 ```
 ```bash
-sudo bash -c 'echo "/dev/mapper/LUKS_ROOT /snapshots btrfs defaults,noatime,ssd,compress=lzo,subvol=@snapshots 0 4" >> /target/etc/fstab'
+sudo bash -c 'echo "PARTUUID=$(blkid -s PARTUUID -o value /dev/sdTARGET4) /snapshots btrfs defaults,noatime,ssd,compress=lzo,subvol=@snapshots 0 4" >> /target/etc/fstab'
 ```
 
 ### Allow Installer To Finish
@@ -364,7 +361,7 @@ Although we have some more work to do before actually installing GRUB (the bootl
 
 ### Reboot For Final Steps
 
-In order to finalise set-up without running into errors it is necessary to unmount and remount the target USB stick. The easiest/quickest way to accomplish this is to shutdown your computer, detach the target USB stick, restart your computer booting from the LMDE installer exactly as you did before, determine the drive letter again, re-open the encrypted filesystems, mount them again, and then do some extra work necessary to install GRUB to the target USB stick. If we figure out an easier way to do this we will update this document.
+In order to finalise set-up without running into errors it is necessary to unmount and remount the target USB stick. The easiest/quickest way to accomplish this is to shutdown your computer, detach the target USB stick, restart your computer booting from the LMDE installer exactly as you did before, determine the drive letter again, mount the filesystems again, and then do some extra work necessary to install GRUB to the target USB stick.
 
 To shutdown your computer use the following command in the terminal:
 
@@ -391,16 +388,10 @@ After connecting to the Internet return to the terminal and continue the followi
 
 ### Decrypt and Mount the Target USB Stick Filesystems Under /target
 
-As before we will decrypt the Target USB Stick's filesystems and mount them under /target. In the interest of speed I have combined the commands where possible. You will be asked for the encryption password by the first two commands, this will be 'setup' if you have used the one suggested. For the last command in this set please replace TARGET with the drive letter of your target USB stick.
+As before we will mount the Target USB Stick's filesystems under /target. In the interest of speed I have combined the commands where possible. For the last command in this set please replace TARGET with the drive letter of your target USB stick.
 
 ```bash
-sudo cryptsetup open /dev/sdTARGET1 LUKS_BOOT
-```
-```bash
-sudo cryptsetup open /dev/sdTARGET4 LUKS_ROOT
-```
-```bash
-sudo mkdir -p /target/boot/efi /target/home /target/root /target/snapshots && sudo mount -o subvol=@ /dev/mapper/LUKS_ROOT /target && sudo mount /dev/mapper/LUKS_BOOT /target/boot && sudo mount -o subvol=@home /dev/mapper/LUKS_ROOT /target/home && sudo mount -o subvol=@root /dev/mapper/LUKS_ROOT /target/root && sudo mount -o subvol=@snapshots /dev/mapper/LUKS_ROOT /target/snapshots
+sudo mkdir -p /target/boot/efi /target/home /target/root /target/snapshots && sudo mount -o subvol=@ /dev/sdTARGET4 /target && sudo mount /dev/sdTARGET1 /target/boot && sudo mount -o subvol=@home /dev/sdTARGET4 /target/home && sudo mount -o subvol=@root /dev/sdTARGET4 /target/root && sudo mount -o subvol=@snapshots /dev/sdTARGET4 /target/snapshots
 ```
 ```bash
 sudo mount /dev/sdTARGET3 /target/boot/efi
@@ -410,7 +401,7 @@ You will now have the target USB stick's filesystems mounted under /target as be
 
 ### Mount Necessary Extra Directories Within /target
 
-To create the initial RAM disk (initrd) and install GRUB we will be using chroot (change root) to make it so that the configuration from the target USB stick is used rather than the configuration from the LMDE installation USB. Before we do that we need to use the following commands to mount a copy of the /dev, /dev/pts and other special directories within target so that they will be available after we use chroot. To do this run the following commands:
+To create the initial RAM disk (initrd) and install GRUB we will be using chroot (change root) to make it so that the configuration from the target USB stick is used rather than the configuration from the LMDE installation USB. Before we do that we need to use the following commands to mount a copy of the /dev, /dev/pts and other special directories within /target so that they will be available after we use chroot. To do this run the following commands:
 
 ```bash
 sudo mount --bind /dev /target/dev
@@ -442,7 +433,7 @@ mount -a
 
 The chroot command effectively makes the /target directory become the / directory within this terminal session and, as mentioned above, this allows us to use the configuration and write to the Target USB stick.
 
-If there are any error messages after running the `mount -a` command it indicates an error in the fstab file. 
+If there are any error messages after running the `mount -a` command it indicates an error in the fstab file that needs to be addressed before continuing.
 
 ### Create Initial RAM Disk
 
@@ -480,7 +471,7 @@ exit
 
 ### Automate System Set-Up
 
-In order to simplify the system set-up process for the end user a [setup script](setup.sh) has been created that automates the process of changing the LUKS encryption passphrase and encryption key, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
+In order to simplify the system set-up process for the end user a [setup script](setup.sh) has been created that automates the process of encrypting the USB stick, adding a new user account, disabling the original setup user account, adding and encrypting a swap partition, growing the root filesystem to use the entire USB stick, and installing any additional software. The setup script is configured to run automatically when the user logs in. Over the next few steps we will set this up.
 
 Download the setup script and a second file that will automatically start it using the following commands:
 
@@ -533,6 +524,7 @@ The following steps are optional, however if you do not include Bitwarden be awa
 
 You can customise the configuration of future user accounts by adding the custom configuration to the /target/etc/skel directory. Files in this directory will be copied to the home directory of any future users, such as the one the setup.sh script creates.
 
+# TODO: This would be a good place to configure Mint's backup to use btrfs snapshots by default
 In our example we download a gist from github and add it to the end of the /target/etc/skel/.bashrc file that will add a beer emoticon to the bash prompt after 4pm on Fridays because sometimes we need a reminder. You could of course do more useful things, like configure software in a particular way, such as disabling third-party cookies in the browsers, enabling a default VPN, pinning particular applications to the task bar, etc.
 
 
@@ -552,23 +544,23 @@ Download Bitwarden and make it available.
 
 The last bit of customisation to finish off the recipe is the installation of the Bitwarden Linux client. While it's great that Bitwarden provide the Linux client in a .deb format, unfortunately it is not in a proper repository so it can not be installed with apt-get.  Additionally the download process requires javascript, so we can not easily script it's download, so it has to be done manually.
 
-Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2026.3.1-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
+Bitwarden's Linux client can be downloaded from [https://bitwarden.com/download/](https://bitwarden.com/download/).  Be sure to download the .deb version and copy it to the setup user's home directory.  At the time of writing the version is Bitwarden-2026.11.0-amd64.deb.  Assuming you downloaded the file to the Downloads directory you can copy it the setup user's home directory with the following command:
 
 ```bash
-sudo cp ~/Downloads/Bitwarden-2026.3.1-amd64.deb /target/home/setup/
+sudo cp ~/Downloads/Bitwarden-2026.11.0-amd64.deb /target/home/setup/
 ```
 
 As the version number is bound to have changed, be sure to update the BITWARDEN variable near the top of the setup.sh script.
 
 In a future write up we plan to discuss pairing the Bitwarden client with [Vaultwarden](https://github.com/dani-garcia/vaultwarden/), a Bitwarden compatible server that provides enterprise-like password sharing and permissions functionality, with a friendly GNU AGPLv3 license.
 
-You are now finished the process of creating your own Linux Mint on an encrypted USB stick, congratulations!
+You are now finished the process of creating your own Linux Mint USB stick, congratulations!
 
 ### Create the Disk Image
 
-If you want to save a copy of your work, either as a back up or to distribute to others, you will want to do that before your first boot. The most important thing you will need is somewhere to save the resulting file, which will be about 9GB in size. If you have a linux machine with enough drive space the easiest way to do this is to use it to create the disk image with the commands below. If you do not have a linux machine we suggest using the LMDE install USB stick and a seperate USB stick (this will require having 3 available USB ports, 1 for the LMDI install USB stick, one for your new Linux Mint encrypted USB Stick (AKA the target USB stick), and a third for the USB stick you will be saving the disk image to.
+If you want to save a copy of your work, either as a back up or to distribute to others, you will want to do that before your first boot. The most important thing you will need is somewhere to save the resulting file, which once compressed will be about 3.5GB in size. If you have a linux machine with enough drive space the easiest way to do this is to use it to create the disk image with the commands below. If you do not have a linux machine we suggest using the LMDE install USB stick and a seperate USB stick (this will require having 3 available USB ports, 1 for the LMDE install USB stick, one for your new Linux Mint encrypted USB Stick (AKA the target USB stick), and a third for the USB stick you will be saving the disk image to.
 
-If you are continuing from and have not rebooted or removed either USB stick their drive letters will not have changed. If you have rebooted or removed either drive you will need to go through the same process as before to determine the drive letter for your target USB stick (the one you created with encrypted Linux Mint system on). Additionally, you will have to use the same process to determine the drive letter of the USB stick you will be saving the disk image to. As before it is really important that you get the drive letters correct because you risk writing to the wrong USB stick if you get it wrong.
+If you are continuing directly from above and have not rebooted or removed either USB stick their drive letters will not have changed. If you have rebooted or removed either drive you will need to go through the same process as before to determine the drive letter for your target USB stick (the one you created your Linux Mint system on). Additionally, you will have to use the same process to determine the drive letter of the USB stick you will be saving the disk image to. As before it is really important that you get the drive letters correct because you risk writing to the wrong USB stick if you get it wrong.
 
 We will use the program dd to create the disk image file of the USB drive. The first step is to calculate how big to make the disk image. Look at the output of the following command to get the necessary information:
 
@@ -577,7 +569,7 @@ sudo sgdisk --print /dev/sdTARGET
 ```
 
 
-
+# TODO: Update screenshot and following text to include change in boot partition size.
 <img width="100%" alt="Output of the command `sgdisk --print /dev/sdb`" src="https://github.com/user-attachments/assets/ccb67bb0-cf7b-419d-966e-cdd26669bc96" />
 
 
@@ -611,6 +603,6 @@ If everything went well you should have a working USB drive based system at this
 
 The end result to this point will be very close to a stock Linux Mint installation. We have chosen to stop at this point, but there are further privacy improvements that could be made, such as disabling third-party cookies in the browsers, having bluetooth default to being off, randomising the bluetooth and wifi MAC addresses, adblocking, etc.
 
-If you are deploying multiple desktops across an organisation you may want to pair your desktops with self hosted services and have the desktop preconfigured to make use of those services or to bookmark them.  The types of services you may want to consider could include NextCloud, Whoogle, Vaultwarden, a VPN, MailCow, or others.
+If you are deploying multiple desktops across an organisation you may want to pair your desktops with self hosted services and have the desktop preconfigured to make use of those services or to bookmark them.  The types of services you may want to consider could include NextCloud, Vaultwarden, a VPN, MailCow, or others.
 
 Using free / open source tools it is possible to securely host tools that will be useful to your organisation.  Watch for a follow-up recipe for hosting such services.

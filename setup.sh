@@ -4,9 +4,8 @@
 #                                                       #
 # Script to complete USB drive system setup:            #
 #                                                       #
-#  - re-encrypt the filesystem with a new passphrase    #
-#  - re-encrypt the filesystem with a new keyfile       #
-#  - remove the setup filesystem passphrase and keyfile #
+#  - encrypt the /boot partition                        #
+#  - encrypt the / partition                            #
 #  - add a new user                                     #
 #  - grow the filesystem to use the whole drive, adding #
 #    enough swap to allow hibernation if size allows    #
@@ -79,13 +78,11 @@ function enter_text () {
 DRIVEDEVICE=`findmnt -n /boot/efi | awk '{ print $2 }' | sed -e 's/[0-9]$//'`;
 KEYFILE="/etc/luks/personalised-boot_os.keyfile";
 RESUME_DEV="/dev/mapper/LUKS_SWAP";
-OLDPASS="setup";
-OLDKEY="/etc/luks/boot_os.keyfile";
-BITWARDEN_DEB="/home/setup/Bitwarden-2026.3.1-amd64.deb";
+BITWARDEN_DEB="/home/setup/Bitwarden-2026.11.0-amd64.deb";
 SETUP_PROGRESS=".setup_progress";
 
 SETUP_HDPASS="hd_pass";
-SETUP_REENCRYPT="reencrypt";
+SETUP_ENCRYPT="encrypt";
 SETUP_HDKEYFILE="hd_keyfile";
 SETUP_CRYPTTAB="update_crypttab";
 SETUP_ADDUSER="add_user";
@@ -116,7 +113,7 @@ fi
 	
 if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 
-	MSGTEXT="The first step is to update the passphrase used to decrypt the USB stick. It is the passphrase asked for when the USB stick is first booted. This must be a strong passphrase that you will remember. \Zb\Z1If this passphrase is lost it will be impossible to recover your files.\Zn\n\nOften a nonsensical phrase (eg Blue tigers glow in the dark) is easier to remember and more secure than a complicated but shorter password."
+	MSGTEXT="The first step is to set the passphrase used to decrypt the USB stick. It will be the passphrase asked for when the USB stick is first booted. This must be a strong passphrase that you will remember. \Zb\Z1If this passphrase is lost it will be impossible to recover your files.\Zn\n\nOften a nonsensical phrase (eg Blue tigers glow in the dark) is easier to remember and more secure than a complicated but shorter password."
 	dialog --colors --erase-on-exit --msgbox "$MSGTEXT" 0 0	
 
 	enter_pass "Enter a storage encryption passphrase"
@@ -128,54 +125,63 @@ if [ ! -f ~/$SETUP_PROGRESS/$SETUP_HDPASS ]; then
 	CHANGES=1
 
 	{
-	# Encrypt the drive with the user's passphrase - using named pipe to provide the
-	# existing password. 
-		echo "Adding passphrase to the boot partition..."
-		mkfifo pipe 
-		echo -n "${OLDPASS}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - ${DRIVEDEVICE}1 pipe &
-		echo -n "${DRIVEPASSPHRASE}" > pipe
-		rm pipe
-
-		echo "Adding passphrase to the root partition..."
-		mkfifo pipe
-		echo -n "${OLDPASS}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - ${DRIVEDEVICE}4 pipe &
-		echo -n "${DRIVEPASSPHRASE}" > pipe
-		rm pipe
-	} 2>&1 | dialog --erase-on-exit --progressbox "Updating drive encryption with your new passphrase..." 21 72 
+#	# Encrypt the drive with the user's passphrase - using named pipe to provide the
+#	# existing password. 
+#		echo "Adding passphrase to the boot partition..."
+#		mkfifo pipe 
+#		echo -n "${OLDPASS}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - ${DRIVEDEVICE}1 pipe &
+#		echo -n "${DRIVEPASSPHRASE}" > pipe
+#		rm pipe
+#
+#		echo "Adding passphrase to the root partition..."
+#		mkfifo pipe
+#		echo -n "${OLDPASS}" | cryptsetup luksAddKey --progress-frequency 10 --key-file - ${DRIVEDEVICE}4 pipe &
+#		echo -n "${DRIVEPASSPHRASE}" > pipe
+#		rm pipe
+#	} 2>&1 | dialog --erase-on-exit --progressbox "Updating drive encryption with your new passphrase..." 21 72 
 
 	touch ~/$SETUP_PROGRESS/$SETUP_HDPASS
 
 fi
 
 
-if [ ! -f ~/$SETUP_PROGRESS/$SETUP_REENCRYPT ]; then
+if [ ! -f ~/$SETUP_PROGRESS/$SETUP_ENCRYPT ]; then
 
 	CHANGES=1
 
-	# We reencrypt the boot and root partitions so that the underlying
-	# volume key is unique to this particular USB stick.
-	# LUKS1, used on boot to be compatible with GRUB, can not be reencrypted while open.
+	# We encrypt the boot and root partitions.
+	# LUKS1, used on boot to be compatible with GRUB, can not be encrypted while open.
 	umount /boot/efi
 	umount /boot
-	cryptsetup close /dev/mapper/LUKS_BOOT
 	{
 		echo "This will take a few minutes..."
 		echo ""
-		echo "Reencrypting the boot partition..."
+		echo "Shrink the boot filesystem..."
+		e2fsck -y -f ${DRIVEDEVICE}1
+		BLOCK_SIZE=`dumpe2fs -h ${DRIVEDEVICE}1 | grep "Block size" | cut -d ':' -f 2 | tr -d ' '`
+		BLOCK_COUNT=`dumpe2fs -h ${DRIVEDEVICE}1 | grep "Block count" | cut -d ':' -f 2 | tr -d ' '`
+		NEW_BLOCK_COUNT=$(($BLOCK_COUNT - 33554432 / $BLOCK_SIZE)) # Shrink by 32MB
+		resize2fs -p "${DRIVEDEVICE}1" "$NEW_BLOCK_COUNT"
 		echo ""
-		echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --progress-frequency 10 --key-file - --key-slot 2 ${DRIVEDEVICE}1
+		echo "Encrypting the boot partition..."
 		echo ""
-		echo "Reencrypting the root partition..."
-		echo ""
+		echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --encrypt --type=luks1 --reduce-device-size 32M --progress-frequency 10 --key-file - --key-slot 1 ${DRIVEDEVICE}1
 		echo -n "${DRIVEPASSPHRASE}" | cryptsetup open ${DRIVEDEVICE}1 LUKS_BOOT
 		mount /dev/mapper/LUKS_BOOT /boot
 		mount ${DRIVEDEVICE}3 /boot/efi
+		
+		echo "Shrink the root filesystem..."
+		echo ""
+		btrfs resize -32M /
+		echo ""
+		echo "Encrypting the root partition..."
+		echo ""
 
 	# LUKS2 can be reencrypted while mounted and in use.
-	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --progress-frequency 10 --key-file - --key-slot 2 ${DRIVEDEVICE}4
-	} 2>&1 | dialog --erase-on-exit --progressbox "Reencrypting the drive so that the underlying volume key is unique to this USB stick." 21 72 
+	echo -n "${DRIVEPASSPHRASE}" | cryptsetup reencrypt --encrypt --type=luks2 --reduce-device-size 32M --progress-frequency 10 --key-file - --key-slot 1 ${DRIVEDEVICE}4
+	} 2>&1 | dialog --erase-on-exit --progressbox "Encrypting the USB stick filesystems." 21 72 
 
-	touch ~/$SETUP_PROGRESS/$SETUP_REENCRYPT
+	touch ~/$SETUP_PROGRESS/$SETUP_ENCRYPT
 
 fi
 
